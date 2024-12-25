@@ -1,38 +1,80 @@
-target/
-!.mvn/wrapper/maven-wrapper.jar
-!**/src/main/**/target/
-!**/src/test/**/target/
-
-### IntelliJ IDEA ###
-.idea/modules.xml
-.idea/jarRepositories.xml
-.idea/compiler.xml
-.idea/libraries/
-*.iws
+# IntelliJ IDEA
+.idea/
 *.iml
+*.iws
 *.ipr
 
-### Eclipse ###
-.apt_generated
-.classpath
-.factorypath
-.project
-.settings
-.springBeans
-.sts4-cache
+# Build Artifacts - Keep target for testing
+out/
+*.class
+*.log
+*.jar
+*.war
+*.ear
 
-### NetBeans ###
-/nbproject/private/
-/nbbuild/
-/dist/
-/nbdist/
-/.nb-gradle/
+# Node and Frontend Specific
+node_modules/
+npm-debug.log
+yarn-error.log
+dist/
 build/
-!**/src/main/**/build/
-!**/src/test/**/build/
-
-### VS Code ###
 .vscode/
 
-### Mac OS ###
+# Environment Files
+*.env
+*.bak
+*.swp
+
+# Logs
+logs/
+*.log
+
+# System Files
 .DS_Store
+Thumbs.db
+ehthumbs.db
+
+# Python (if applicable)
+__pycache__/
+*.py[cod]
+
+# Java Specific - Keep target directory
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+.settings/
+bin/
+gen/
+
+# Node (if needed)
+yarn.lock
+package-lock.json
+
+# Test Reports and Coverage
+/test-output/
+/reports/
+/allure-results/
+/allure-report/
+/coverage/
+/*.lcov
+/*.test.js.snap
+
+# Selenium/WebDriver files
+chromedriver.log
+chromedriver.exe
+geckodriver.log
+geckodriver.exe
+
+# Screenshots
+/screenshots/
+/*.png
+/*.jpeg
+
+# Keep Test and Target Files
+!src/test/
+!target/
