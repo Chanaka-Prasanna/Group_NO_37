@@ -2,7 +2,6 @@ package stepDefinitions;
 
 import io.cucumber.java.en.*;
 import io.restassured.RestAssured;
-import io.restassured.response.Response;
 import static org.testng.Assert.assertEquals;
 
 public class commonSteps {
@@ -13,15 +12,15 @@ public class commonSteps {
     }
 
 
-    @Given("I am an Admin with Basic Authentication")
-    public void iAmAnAdminWithBasicAuthentication() {
+    @Given("I logged in to the system with admin credentials")
+    public void iLoggedInToTheSystemWithAdminCredentials() {
         RestAssured.baseURI = "http://localhost:7081";
         sharedState.username = "admin";
         sharedState.password = "password";
     }
 
-    @Given("I am a User with Basic Authentication")
-    public void iAmAUserWithBasicAuthentication() {
+    @Given("I logged in to the system with user credentials")
+    public void iLoggedInToTheSystemWithUserCredentials() {
         RestAssured.baseURI = "http://localhost:7081";
         sharedState.username = "user";
         sharedState.password = "password";
