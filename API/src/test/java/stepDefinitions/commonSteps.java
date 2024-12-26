@@ -20,8 +20,8 @@ public class commonSteps {
         sharedState.password = "password";
     }
 
-    @Given("I am a User with Basic Authentication")
-    public void iAmAUserWithBasicAuthentication() {
+    @Given("I am an User with Basic Authentication")
+    public void iAmAnUserWithBasicAuthentication() {
         RestAssured.baseURI = "http://localhost:7081";
         sharedState.username = "user";
         sharedState.password = "password";
