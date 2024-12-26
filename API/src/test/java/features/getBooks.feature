@@ -1,0 +1,27 @@
+Feature: Book Management API Tests
+Scenarios to validate GET request using Basic Authentication.
+
+  Scenario: Fetch book details for a valid book ID as a User
+    Given I am a User with Basic Authentication
+    When I send a GET request to "/api/books/1"
+    Then I should receive a 200 status code
+
+  Scenario: Fetch book details for a invalid book ID as a User
+    Given I am a User with Basic Authentication
+    When I send a GET request to "/api/books/99"
+    Then I should receive a 404 status code
+
+  Scenario: Fetch all book details as an Admin
+    Given I am an Admin with Basic Authentication
+    When I send a GET request to "/api/books"
+    Then I should receive a 200 status code
+
+  Scenario: Fetch book details for a valid book ID as an Admin
+    Given I am an Admin with Basic Authentication
+    When I send a GET request to "/api/books/99"
+    Then I should receive a 404 status code
+
+  Scenario: Fetch book details for a valid book ID as a non registered User
+    Given I am a User without Basic Authentication
+    When I send a GET request to "/api/books/1"
+    Then I should receive a 401 status code

@@ -15,17 +15,25 @@ public class commonSteps {
 
     @Given("I am an Admin with Basic Authentication")
     public void iAmAnAdminWithBasicAuthentication() {
-        RestAssured.baseURI = "http://localhost:7081";
+        RestAssured.baseURI = sharedState.baseURI;
         sharedState.username = "admin";
         sharedState.password = "password";
     }
 
     @Given("I am a User with Basic Authentication")
     public void iAmAUserWithBasicAuthentication() {
-        RestAssured.baseURI = "http://localhost:7081";
+        RestAssured.baseURI = sharedState.baseURI;
         sharedState.username = "user";
         sharedState.password = "password";
     }
+
+    @Given("I am a User without Basic Authentication")
+    public void iAmAUserWithoutBasicAuthentication() {
+        RestAssured.baseURI = sharedState.baseURI;
+        sharedState.username = "";
+        sharedState.password = "";
+    }
+
     @Then("I should receive a {int} status code")
     public void iShouldReceiveAStatusCode(int expectedStatusCode) {
         assertEquals(sharedState.response.getStatusCode(), expectedStatusCode);
