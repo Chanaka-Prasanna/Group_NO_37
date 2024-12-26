@@ -9,7 +9,32 @@
     <test name="Login Tests">
         <classes>
             <class name="test_runners.TestRunner"/>
+
         </classes>
     </test>
 
 </suite>
+
+
+<!--<suite name="Parallel Suite" parallel="tests" thread-count="3">-->
+
+<!--<test name="Cart Tests">-->
+<!--    <classes>-->
+<!--        <class name="test_runners.CartTestRunner"/>-->
+<!--    </classes>-->
+<!--</test>-->
+
+<!--<test name="Checkout Tests">-->
+<!--    <classes>-->
+<!--        <class name="test_runners.CheckoutTestRunner"/>-->
+<!--    </classes>-->
+<!--</test>-->
+
+<!--<test name="Profile Tests">-->
+<!--    <classes>-->
+<!--        <class name="test_runners.ProfileTestRunner"/>-->
+<!--    </classes>-->
+<!--</test>-->
+
+<!--</suite>-->
+
