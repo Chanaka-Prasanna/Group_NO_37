@@ -2,6 +2,7 @@ package stepDefinitions;
 
 import io.cucumber.java.en.*;
 import io.restassured.RestAssured;
+import io.restassured.response.Response;
 import static org.testng.Assert.assertEquals;
 
 public class commonSteps {
