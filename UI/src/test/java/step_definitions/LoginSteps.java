@@ -134,7 +134,7 @@ public class LoginSteps {
     @Step("Navigate to Login Page")
     public void user_is_in_the_login_page() {
         try {
-            driver.get(Config.get_base_url("BASE_URL") + "Login");
+            driver.get(Config.env_values("BASE_URL") + "Login");
             login = new Login(driver);
             Allure.step("Successfully navigated to login page");
         } catch (Exception e) {
@@ -171,7 +171,7 @@ public class LoginSteps {
         }
     }
 
-    @Then("user should see the my account section")
+    @Then("user should  see the my account section")
     @Step("Verify My Account Section")
     public void user_should_see_the_my_account_section() {
         try {
@@ -202,4 +202,6 @@ public class LoginSteps {
             Allure.step("Error closing driver: " + e.getMessage());
         }
     }
+
+
 }
