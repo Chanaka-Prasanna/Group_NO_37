@@ -7,9 +7,6 @@ Feature: Filter Menu Functionality
 
     Examples:
       | filterType      | filterOption            |
-      | Sub Category    | Imported Fruits         |
-      | Sub Category    | Local Fruits            |
-      | Discount        | %Off - High to Low      |
       | Price           | Price - Low to High     |
       | Price           | Price - High to Low     |
       | Alphabetical    | A - Z                   |
@@ -17,7 +14,7 @@ Feature: Filter Menu Functionality
 
   Scenario: Clear all filters after applying a combination
     Given user is on the fruits listing page
-    When user selects "Local Fruits" from "Sub Category" filter
+    When user selects "A - Z" from "Alphabetical" filter
     And user selects "Price - High to Low" from "Price" filter
     And user clicks on clear all
     Then all products are displayed

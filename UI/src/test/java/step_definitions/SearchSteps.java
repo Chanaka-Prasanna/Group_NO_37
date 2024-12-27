@@ -18,9 +18,9 @@ public class SearchSteps {
     @Given("the user is on the homepage")
     public void the_user_is_on_the_homepage() {
         driver = DriverFactory.get_driver();
-        driver.get(Config.get_base_url("BASE_URL")); // Replace with the actual homepage URL
+        driver.get(Config.env_values("BASE_URL")); // Replace with the actual homepage URL
         searchBar = new SearchBar(driver);
-        Allure.step("Navigated to the homepage:"+ Config.get_base_url("BASE_URL"));
+        Allure.step("Navigated to the homepage:"+ Config.env_values("BASE_URL"));
     }
 
     @Step("User searches for the term: {searchTerm}")
@@ -36,7 +36,7 @@ public class SearchSteps {
     @Then("the search results page for {string} should be displayed")
     public void the_search_results_page_for_should_be_displayed(String searchTerm) {
         boolean isCorrectURL = searchBar.isSearchResultsPageURLCorrect(searchTerm);
-        Allure.step("Expected URL:"+Config.get_base_url("BASE_URL")+"/product/" + searchTerm.toLowerCase() + "?PS=" + searchTerm.toLowerCase());
+        Allure.step("Expected URL:"+Config.env_values("BASE_URL")+"/product/" + searchTerm.toLowerCase() + "?PS=" + searchTerm.toLowerCase());
         Assert.assertTrue(isCorrectURL, "The URL of the search results page is incorrect for term: " + searchTerm);
         Allure.step("Search results page URL is correct");
     }

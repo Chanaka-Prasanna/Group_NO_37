@@ -4,7 +4,10 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class FilterMenu {
     WebDriver driver;
@@ -59,13 +62,69 @@ public class FilterMenu {
     // Method to validate filtered products
     public boolean is_filter_applied(String filterCriterion) {
         List<WebElement> products = driver.findElements(product_list);
+        List<String> productTexts = new ArrayList<>();
 
+        // Extract product details from WebElements
         for (WebElement product : products) {
-            System.out.println(product.getText());
-            if (!product.getText().contains(filterCriterion)) {
-                return false;
+            productTexts.add(product.getText().trim());
+        }
+
+        switch (filterCriterion) {
+            case "Price - Low to High":
+                return isPriceSorted(productTexts, true); // Ascending order
+            case "Price - High to Low":
+                return isPriceSorted(productTexts, false); // Descending order
+            case "A - Z":
+                return isAlphabeticallySorted(productTexts, true); // Ascending order
+            case "Z - A":
+                return isAlphabeticallySorted(productTexts, false); // Descending order
+            case "":
+                return true;
+            default:
+                throw new IllegalArgumentException("Unknown filter criterion: " + filterCriterion);
+        }
+    }
+
+    private boolean isPriceSorted(List<String> productTexts, boolean ascending) {
+        List<Double> prices = new ArrayList<>();
+
+        for (String text : productTexts) {
+            try {
+                // Use a regular expression to extract the numeric part of the price
+                Pattern pattern = Pattern.compile("Rs\\.\\s*(\\d+(?:\\.\\d{2})?)");
+                Matcher matcher = pattern.matcher(text);
+
+                if (matcher.find()) {
+                    // Group 1 contains the numeric part of the price
+                    String priceString = matcher.group(1);
+                    prices.add(Double.parseDouble(priceString));
+                } else {
+                    throw new NumberFormatException("Price format not found in text: " + text);
+                }
+            } catch (NumberFormatException e) {
+                System.err.println("Invalid price format: " + text);
+                throw e;
             }
+        }
+
+        // Validate sorting order
+        for (int i = 1; i < prices.size(); i++) {
+            if (ascending && prices.get(i) > prices.get(i - 1)) return false;
+            if (!ascending && prices.get(i) < prices.get(i - 1)) return false;
+        }
+
+        return true;
+    }
+
+
+
+    // Helper to check if strings are sorted alphabetically
+    private boolean isAlphabeticallySorted(List<String> productTexts, boolean ascending) {
+        for (int i = 1; i < productTexts.size(); i++) {
+            if (ascending && productTexts.get(i).compareToIgnoreCase(productTexts.get(i - 1)) < 0) return false;
+            if (!ascending && productTexts.get(i).compareToIgnoreCase(productTexts.get(i - 1)) > 0) return false;
         }
         return true;
     }
+
 }

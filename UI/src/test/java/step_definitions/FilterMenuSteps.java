@@ -19,7 +19,7 @@ public class FilterMenuSteps {
     @Step("Navigate to the fruits listing page")
     public void user_is_on_the_fruits_listing_page() {
         driver = DriverFactory.get_driver();
-        driver.get(Config.get_base_url("BASE_URL") + "Product/Fruits?IC=OQ==&NC=RnJ1aXRz"); // Replace "Fruits" with actual endpoint
+        driver.get(Config.env_values("BASE_URL") + "Product/Fruits?IC=OQ==&NC=RnJ1aXRz"); // Replace "Fruits" with actual endpoint
         filterMenu = new FilterMenu(driver);
         Allure.addAttachment("Page URL", driver.getCurrentUrl());
     }

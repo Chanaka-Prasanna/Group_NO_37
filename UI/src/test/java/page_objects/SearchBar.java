@@ -28,7 +28,7 @@ public class SearchBar {
 
     // Method to validate the URL of the search results page
     public boolean isSearchResultsPageURLCorrect(String searchTerm) {
-        String expectedURL = Config.get_base_url("BASE_URL") +"product/"+ searchTerm + "?PS=" + searchTerm;
+        String expectedURL = Config.env_values("BASE_URL") +"product/"+ searchTerm + "?PS=" + searchTerm;
         String currentURL = driver.getCurrentUrl();
         System.out.println("Current URL: " + currentURL);
         System.out.println("Expected URL: " + expectedURL);
