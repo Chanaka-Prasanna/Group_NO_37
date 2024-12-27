@@ -58,7 +58,7 @@ public class AddToCartSteps {
 
             Allure.addAttachment("Error Screenshot", new ByteArrayInputStream(((org.openqa.selenium.TakesScreenshot) driver).getScreenshotAs(org.openqa.selenium.OutputType.BYTES)));
             Allure.step("Blocked - Exception during login: " + e.getMessage());
-            Assert.fail("Blocked - Exception during login: ");
+            Assert.fail("Blocked - Exception during login");
 
         }
     }
