@@ -39,7 +39,7 @@ public class AddToCartSteps {
             driver.get(Config.env_values("BASE_URL")+"Login");
             loginpage.login(Config.env_values("LOGIN_TEXT"),Config.env_values("PASSWORD"));
 
-            driver.get(Config.env_values("BASE_URL") + SAMPLE_PRODUCT_PAGE );
+            driver.get(Config.env_values("BASE_URL") +"/index");
             cart = new Cart(driver);
 
             String expected_txt = "My Account";
@@ -69,6 +69,7 @@ public class AddToCartSteps {
         try {
 
             String expected_txt = "Showing Products for";
+            driver.get(Config.env_values("BASE_URL") + SAMPLE_PRODUCT_PAGE);
             String actual_txt =  cart.if_on_product_page();
             if (actual_txt.equals(expected_txt)){
                 Allure.step("User in product page");
@@ -121,7 +122,7 @@ public class AddToCartSteps {
     }
 
 
-    @And("I click on the \"Add to Cart\" button")
+    @And("I click on the Add to Cart button")
     @Step("Click On Add To Cart")
     public void i_click_on_the_add_to_cart_button(){
         try {
