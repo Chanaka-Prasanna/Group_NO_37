@@ -52,23 +52,24 @@ public class UpdateProfile {
     @When("I update my profile information")
     public void update_profile_information() {
         try {
-            System.out.println("1--------");
-            driver.findElement(By.xpath("//*[@id=\"txtFirstName\"]")).sendKeys("Chanaka 1");
-            System.out.println("2--------");
-            driver.findElement(By.xpath("//*[@id=\"txtLastName\"]")).sendKeys("ppasanna");
-            System.out.println("2--------");
-            driver.findElement(By.xpath("//*[@id=\"ddlGender\"]")).sendKeys("01/12/2008");;
-//            WebElement dropdown = driver.findElement(By.id("countryDropdown"));
-//            dropdown.getText().trim();
-            System.out.println("4--------");
-            WebElement dropdown = driver.findElement(By.xpath("//*[@id=\"ddlGender\"]"));
+            By f_name_path  = By.xpath("//*[@id=\"txtFirstName\"]");
+            By l_name_path  = By.xpath("//*[@id=\"txtLastName\"]");
+            By b_day_path   = By.xpath("//*[@id=\"txtDob\"]");
+            By gender_path  = By.xpath("//*[@id=\"ddlGender\"]");
+            By nic_path     = By.xpath("//*[@id=\"txtNIC\"]");
+
+
+            driver.findElement(f_name_path).sendKeys("Chanaka 1");
+            driver.findElement(l_name_path).sendKeys("ppasanna");
+            driver.findElement(b_day_path).sendKeys("01/12/2008");;
+            WebElement dropdown = driver.findElement(gender_path);
             Select select = new Select(dropdown);
-            select.selectByVisibleText("Male");
-            System.out.println("5--------");
-//
-            if ( driver.findElement(By.xpath("//*[@id=\"txtNIC\"]")).isDisplayed()){
-                driver.findElement(By.xpath("//*[@id=\"txtNIC\"]")).sendKeys("200032569345");
-                System.out.println("6--------");
+            select.selectByVisibleText("Female");
+
+
+
+            if ( driver.findElement(nic_path).isDisplayed()){
+                driver.findElement(nic_path).sendKeys("200032569345");
             }
 
             driver.findElement(By.xpath("//*[@id=\"btnSave\"]")).click();
