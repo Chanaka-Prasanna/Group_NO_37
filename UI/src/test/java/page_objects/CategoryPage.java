@@ -50,7 +50,7 @@ public class CategoryPage {
             }
             return productList.isDisplayed();
         } catch (NoSuchElementException e) {
-            return false; // Element not found
+            return false;
         }
     }
 }

@@ -71,18 +71,18 @@ public class CategoryNavigation {
 
     @Given("I am on the Cargills Online homepage")
     public void i_am_on_the_cargills_online_homepage() {
-        driver.get(Config.env_values("BASE_URL")); // Open the homepage
+        driver.get(Config.env_values("BASE_URL"));
         homePage = new HomePage(driver);
     }
 
     @When("I click on the {string} category")
     public void i_click_on_the_category(String category) {
-        categoryPage = homePage.selectCategory(category); // Pass category name to selectCategory method
+        categoryPage = homePage.selectCategory(category);
     }
 
     @Then("I should see a list of products under the {string}")
     public void i_should_see_a_list_of_products_under_the_category(String category) throws InterruptedException {
-        boolean productsDisplayed = categoryPage.areProductsDisplayed(category); // Pass category name to areProductsDisplayed method
+        boolean productsDisplayed = categoryPage.areProductsDisplayed(category);
         if (!productsDisplayed) {
             throw new AssertionError("Products are not displayed under the category: " + category);
         }
