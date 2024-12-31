@@ -15,7 +15,6 @@ import utils.DriverFactory;
 public class SocialMediaNavigationSteps {
     WebDriver driver;
     HomePage homePage;
-    String actualURL;
 
     @Before
     public void setup() {

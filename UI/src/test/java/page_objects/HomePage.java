@@ -46,6 +46,9 @@ public class HomePage {
     By fruitsPath = By.xpath("//*[@id=\"divDynamicSection\"]/div[3]/div[1]/div/div[2]/div[2]/div[2]/div/a");
     By faceBookPath = By.xpath("/html/body/div[7]/div[1]/div[3]/div/div[2]/ul/li[1]/a/i");
     By instagramPath = By.xpath("/html/body/div[7]/div[1]/div[3]/div/div[2]/ul/li[3]/a/i");
+
+    By googlePlayLink = By.xpath("/html/body/div[7]/div[1]/div[3]/div/div[1]/a[1]");
+    By appStoreLink = By.xpath("/html/body/div[7]/div[1]/div[3]/div/div[1]/a[2]");
     WebDriver driver;
 
     public HomePage(WebDriver driver) {
@@ -98,6 +101,33 @@ public class HomePage {
         public String getCurrentURL() {
             return driver.getCurrentUrl();
         }
+
+    public void clickAppDownloadLink(String link) {
+        By path = switch (link.toLowerCase()) {
+            case "google play" -> googlePlayLink;
+            case "app store" -> appStoreLink;
+            default -> throw new IllegalArgumentException("Unsupported social media: " + link);
+        };
+
+        try {
+            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+            WebElement element = wait.until(ExpectedConditions.visibilityOfElementLocated(path));
+
+            ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", element);
+
+            wait.until(ExpectedConditions.elementToBeClickable(element));
+
+            element.click();
+        } catch (Exception e) {
+            System.out.println("Error clicking the element: " + e.getMessage());
+            try {
+                WebElement element = driver.findElement(path);
+                ((JavascriptExecutor) driver).executeScript("arguments[0].click();", element);
+            } catch (Exception jsException) {
+                throw new RuntimeException("Failed to click the element using both standard and JavaScript methods: " + jsException.getMessage());
+            }
+        }
+    }
     }
 
 
