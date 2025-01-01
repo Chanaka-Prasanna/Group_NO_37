@@ -17,7 +17,7 @@ public class ProductCard {
     By incrementButtonPath = By.xpath(".//span[contains(@class, 'plus')]");
     By decrementButtonPath = By.xpath(".//span[contains(@class, 'minus')]");
     By productLinkPath = By.id("card_");
-    By my_acc_path      =  By.xpath("//*[@id=\"spnAcc\"]");
+    By my_acc_path      =  By.id("spnAcc");
     By product_list = By.xpath("//div[@id='divProducts']/div[contains(@class, 'cargillProd')]");// Locator for filtered products
 
 
@@ -25,6 +25,8 @@ public class ProductCard {
 
     public String loggedIn(){
         try{
+            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(35));
+            wait.until(ExpectedConditions.visibilityOfElementLocated(my_acc_path));
             return driver.findElement(my_acc_path).getText();
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -71,6 +73,8 @@ public class ProductCard {
 
 
     public boolean isQuantitySelectorDisplayed() {
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(45));
+        wait.until(ExpectedConditions.visibilityOfElementLocated(quantitySelectorPath));
         System.out.println(getACard().getText());
         return getACard().findElement(quantitySelectorPath).isDisplayed();
     }
@@ -80,12 +84,15 @@ public class ProductCard {
     }
 
     public void decrementQuantity() {
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
         getACard().findElement(decrementButtonPath).click();
     }
 
     public int getQuantity() {
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(45));
+        wait.until(ExpectedConditions.visibilityOfElementLocated(quantitySelectorPath));
         WebElement quantityElement = getACard().findElement(quantitySelectorPath);
-        return Integer.parseInt(quantityElement.getAttribute("value"));
+        return Integer.parseInt(quantityElement.getText());
     }
 
     public void clickProductLink() {
