@@ -45,7 +45,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: chromedriver-exe
-          path: src/test/resources/driver/chromedriver.exe
+          path: UI/src/test/resources/driver/chromedriver.exe
 
       # Step 6: Install Wine to run .exe on Ubuntu
       - name: Install Wine
