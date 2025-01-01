@@ -1,4 +1,4 @@
-name: FrontEnd Reports Pipeline
+name:  Pipeline
 
 on:
   push:
@@ -22,7 +22,7 @@ jobs:
         uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
-          java-version: '21' # Adjust the version as needed
+          java-version: '21'
 
       # Step 3: Cache Maven dependencies
       - name: Cache Maven dependencies
@@ -33,24 +33,37 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-maven-
 
-      # Step 4: Install Maven dependencies
+      # Step 4: Set up Chrome and Chromedriver
+      - name: Set up Chrome and Chromedriver
+        uses: browser-actions/setup-chrome@v1
+        with:
+          chrome-version: 'stable'
+      - name: Download Chromedriver
+        run: |
+          sudo apt-get install -y unzip
+          wget https://chromedriver.storage.googleapis.com/$(google-chrome --version | grep -Po '\d+\.\d+\.\d+' | head -n1)/chromedriver_linux64.zip
+          unzip chromedriver_linux64.zip
+          sudo mv chromedriver /usr/local/bin/
+          sudo chmod +x /usr/local/bin/chromedriver
+
+      # Step 5: Install Maven dependencies
       - name: Install dependencies
         run: mvn install -DskipTests
         working-directory: UI
 
-      # Step 5: Run tests and generate Allure results
+      # Step 6: Run tests and generate Allure results
       - name: Run tests and generate Allure results
         run: mvn test -Dsurefire.suiteXmlFiles=testng.xml -Dallure.results.directory=target/allure-results
         working-directory: UI
 
-      # Step 6: Generate Allure HTML report
+      # Step 7: Generate Allure HTML report
       - name: Generate Allure Report
         run: |
           npm install -g allure-commandline --force
           allure generate target/allure-results -o target/allure-report --clean
         working-directory: UI
 
-      # Step 7: Upload Allure HTML report as an artifact
+      # Step 8: Upload Allure HTML report as an artifact
       - name: Upload Allure Report
         uses: actions/upload-artifact@v3
         with:
