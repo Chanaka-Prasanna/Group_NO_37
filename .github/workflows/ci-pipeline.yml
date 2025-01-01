@@ -36,16 +36,20 @@ jobs:
       # Step 4: Check Chrome version
       - name: Check Chrome version
         id: chrome-version
-        run: google-chrome --version
+        run: |
+          CHROME_VERSION=$(google-chrome --version | awk '{print $3}')
+          echo "chrome_version=${CHROME_VERSION}" >> $GITHUB_ENV
 
-      # Step 5: Extract Chrome version and download Chromedriver
+      # Step 5: Download compatible Chromedriver
       - name: Download Chromedriver
         run: |
           sudo apt-get install -y unzip
-          CHROME_VERSION=$(google-chrome --version | awk '{print $3}' | cut -d'.' -f1)
-          DRIVER_VERSION=$(wget -qO- "https://chromedriver.storage.googleapis.com/LATEST_RELEASE_${CHROME_VERSION}")
-          echo "Chrome Version: $CHROME_VERSION"
-          echo "Chromedriver Version: $DRIVER_VERSION"
+          CHROME_MAJOR_VERSION=$(echo $CHROME_VERSION | cut -d'.' -f1)
+          DRIVER_VERSION=$(wget -qO- "https://chromedriver.storage.googleapis.com/LATEST_RELEASE_${CHROME_MAJOR_VERSION}" || echo "fallback")
+          if [ "$DRIVER_VERSION" = "fallback" ]; then
+            DRIVER_VERSION=$(wget -qO- "https://chromedriver.storage.googleapis.com/LATEST_RELEASE")
+          fi
+          echo "Using Chromedriver version: $DRIVER_VERSION"
           wget "https://chromedriver.storage.googleapis.com/$DRIVER_VERSION/chromedriver_linux64.zip"
           unzip chromedriver_linux64.zip
           sudo mv chromedriver /usr/local/bin/
@@ -68,7 +72,7 @@ jobs:
           allure generate target/allure-results -o target/allure-report --clean
         working-directory: UI
 
-      # Step 9: Upload Allure HTML report as an artifact
+      # Step 8: Upload Allure HTML report as an artifact
       - name: Upload Allure Report
         uses: actions/upload-artifact@v3
         with:
