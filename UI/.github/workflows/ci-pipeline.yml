@@ -1,0 +1,55 @@
+name: Selenium Cucumber TestNG Pipeline
+
+on:
+  push:
+    branches:
+      - 204175A
+  pull_request:
+    branches:
+      - 204175A
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout code
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Step 2: Set up JDK
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '21' # Adjust the version as needed
+
+      # Step 3: Cache Maven dependencies
+      - name: Cache Maven dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+
+      # Step 4: Install Maven dependencies
+      - name: Install dependencies
+        run: mvn install -DskipTests
+
+      # Step 5: Run tests and generate Allure results
+      - name: Run tests and generate Allure results
+        run: mvn test -Dsurefire.suiteXmlFiles=testng.xml -Dallure.results.directory=target/allure-results
+
+      # Step 6: Generate Allure HTML report
+      - name: Generate Allure Report
+        run: |
+          npm install -g allure-commandline --force
+          allure generate target/allure-results -o target/allure-report --clean
+
+      # Step 7: Upload Allure HTML report as an artifact
+      - name: Upload Allure Report
+        uses: actions/upload-artifact@v3
+        with:
+          name: allure-report
+          path: target/allure-report
