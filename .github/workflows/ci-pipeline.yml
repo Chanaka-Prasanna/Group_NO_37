@@ -64,6 +64,10 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: chromedriver-exe
+        
+      - name: Move chromedriver.exe to the correct path
+        run: |
+          mv /home/runner/work/Group_NO_37/Group_NO_37/chromedriver.exe UI/src/test/resources/driver/chromedriver.exe
 
       # Step 9: Make chromedriver.exe executable with Wine
       - name: Make chromedriver.exe executable with Wine
