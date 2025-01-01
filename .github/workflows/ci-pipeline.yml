@@ -1,4 +1,4 @@
-name: Selenium Cucumber TestNG Pipeline
+name: FrontEnd Reports Pipeline
 
 on:
   push:
@@ -29,27 +29,30 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ~/.m2
-          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/UI/pom.xml') }}
           restore-keys: |
             ${{ runner.os }}-maven-
 
       # Step 4: Install Maven dependencies
       - name: Install dependencies
         run: mvn install -DskipTests
+        working-directory: UI
 
       # Step 5: Run tests and generate Allure results
       - name: Run tests and generate Allure results
         run: mvn test -Dsurefire.suiteXmlFiles=testng.xml -Dallure.results.directory=target/allure-results
+        working-directory: UI
 
       # Step 6: Generate Allure HTML report
       - name: Generate Allure Report
         run: |
           npm install -g allure-commandline --force
           allure generate target/allure-results -o target/allure-report --clean
+        working-directory: UI
 
       # Step 7: Upload Allure HTML report as an artifact
       - name: Upload Allure Report
         uses: actions/upload-artifact@v3
         with:
           name: allure-report
-          path: target/allure-report
+          path: UI/target/allure-report
