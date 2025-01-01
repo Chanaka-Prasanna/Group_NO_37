@@ -40,39 +40,51 @@ jobs:
           CHROME_VERSION=$(google-chrome --version | awk '{print $3}')
           echo "chrome_version=${CHROME_VERSION}" >> $GITHUB_ENV
 
-      # Step 5: Download compatible Chromedriver
-      - name: Download Chromedriver
-        run: |
-          sudo apt-get install -y unzip
-          CHROME_MAJOR_VERSION=$(echo $CHROME_VERSION | cut -d'.' -f1)
-          DRIVER_VERSION=$(wget -qO- "https://chromedriver.storage.googleapis.com/LATEST_RELEASE_${CHROME_MAJOR_VERSION}" || echo "fallback")
-          if [ "$DRIVER_VERSION" = "fallback" ]; then
-            DRIVER_VERSION=$(wget -qO- "https://chromedriver.storage.googleapis.com/LATEST_RELEASE")
-          fi
-          echo "Using Chromedriver version: $DRIVER_VERSION"
-          wget "https://chromedriver.storage.googleapis.com/$DRIVER_VERSION/chromedriver_linux64.zip"
-          unzip chromedriver_linux64.zip
-          sudo mv chromedriver /usr/local/bin/
-          sudo chmod +x /usr/local/bin/chromedriver
+      # Step 5: Upload chromedriver.exe for Windows
+      - name: Upload chromedriver.exe (Windows)
+        uses: actions/upload-artifact@v3
+        with:
+          name: chromedriver-exe
+          path: src/test/resources/driver/chromedriver.exe
 
-      # Step 6: Install Maven dependencies
-      - name: Install dependencies
+      # Step 6: Install Wine to run .exe on Ubuntu
+      - name: Install Wine
+        run: |
+          sudo dpkg --add-architecture i386
+          sudo apt-get update
+          sudo apt-get install -y wine64 wine32
+
+      # Step 7: Download and install dependencies
+      - name: Install Maven dependencies
         run: mvn install -DskipTests
         working-directory: UI
 
-      # Step 7: Run tests and generate Allure results
+      # Step 8: Download chromedriver.exe artifact
+      - name: Download chromedriver.exe artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: chromedriver-exe
+
+      # Step 9: Make chromedriver.exe executable with Wine
+      - name: Make chromedriver.exe executable with Wine
+        run: |
+          sudo wine src/test/resources/driver/chromedriver.exe --version
+          sudo chmod +x src/test/resources/driver/chromedriver.exe
+          echo "Using chromedriver located at: src/test/resources/driver/chromedriver.exe"
+
+      # Step 10: Run tests and generate Allure results
       - name: Run tests and generate Allure results
         run: mvn test -Dsurefire.suiteXmlFiles=testng.xml -Dallure.results.directory=target/allure-results
         working-directory: UI
 
-      # Step 8: Generate Allure HTML report
+      # Step 11: Generate Allure HTML report
       - name: Generate Allure Report
         run: |
           npm install -g allure-commandline --force
           allure generate target/allure-results -o target/allure-report --clean
         working-directory: UI
 
-      # Step 8: Upload Allure HTML report as an artifact
+      # Step 12: Upload Allure HTML report as an artifact
       - name: Upload Allure Report
         uses: actions/upload-artifact@v3
         with:
