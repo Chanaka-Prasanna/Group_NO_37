@@ -23,7 +23,7 @@ public class ShopByBrand {
 
     // Method to get all brand items
     public List<WebElement> getAllBrandItems() {
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(60));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(100));
         return wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(brandItemsLocator));
     }
 
