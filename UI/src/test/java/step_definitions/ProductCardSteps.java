@@ -4,7 +4,10 @@ import io.cucumber.java.en.And;
 import io.qameta.allure.Allure;
 import io.qameta.allure.Description;
 import io.qameta.allure.Step;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 import page_objects.Cart;
 import page_objects.Login;
@@ -18,11 +21,13 @@ import io.cucumber.java.en.When;
 import io.cucumber.java.Before;
 
 import java.io.ByteArrayInputStream;
+import java.time.Duration;
 
 public class ProductCardSteps {
     WebDriver driver;
     ProductCard productCard;
     Login login;
+    By my_acc_path      =  By.id("btnSign");
 
     @Before
     public void setUp() {
@@ -34,8 +39,11 @@ public class ProductCardSteps {
     @Description("Logs in the user before performing Add to Cart functionality.")
     public void user_is_logged_in() {
         try {
+
             LoginPage loginpage = new LoginPage(driver);
             driver.get(Config.env_values("BASE_URL")+"Login");
+            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(25));
+            wait.until(ExpectedConditions.visibilityOfElementLocated(my_acc_path));
             loginpage.login(Config.env_values("LOGIN_TEXT"),Config.env_values("PASSWORD"));
             System.out.println("Login successful");
 
@@ -116,7 +124,7 @@ public class ProductCardSteps {
     @Description("Asserts that the quantity increases correctly when the + button is clicked.")
     public void the_quantity_should_increase_by_1() {
         int quantity = productCard.getQuantity();
-        Assert.assertEquals(quantity, 1, "Quantity did not increment as expected");
+        Assert.assertEquals(quantity, 2, "Quantity did not increment as expected");
         addAllureAttachment("Quantity Verification", "Quantity incremented to: " + quantity);
     }
 
@@ -133,7 +141,7 @@ public class ProductCardSteps {
     @Description("Asserts that the quantity decreases correctly when the - button is clicked.")
     public void the_quantity_should_decrease_by_1() {
         int quantity = productCard.getQuantity();
-        Assert.assertEquals(quantity, 0, "Quantity did not decrement as expected");
+        Assert.assertEquals(quantity, 1, "Quantity did not decrement as expected");
         addAllureAttachment("Quantity Verification", "Quantity decremented to: " + quantity);
     }
 

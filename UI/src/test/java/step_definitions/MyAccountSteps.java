@@ -7,8 +7,11 @@ import io.qameta.allure.Allure;
 import io.qameta.allure.Description;
 import io.qameta.allure.Step;
 import io.qameta.allure.Attachment;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 import page_objects.LoginPage;
 import page_objects.MyAccount;
@@ -16,6 +19,7 @@ import utils.Config;
 import utils.DriverFactory;
 
 import java.io.ByteArrayInputStream;
+import java.time.Duration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,6 +27,7 @@ import java.util.Map;
 public class MyAccountSteps {
     WebDriver driver = DriverFactory.get_driver();
     MyAccount myAccount;
+    By my_acc_path      =  By.id("btnSign");
 
     @Step("User logs in ")
     @Given("user is logged in")
@@ -31,6 +36,8 @@ public class MyAccountSteps {
         try {
             LoginPage loginpage = new LoginPage(driver);
             driver.get(Config.env_values("BASE_URL")+"Login");
+            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(25));
+            wait.until(ExpectedConditions.visibilityOfElementLocated(my_acc_path));
             loginpage.login(Config.env_values("LOGIN_TEXT"),Config.env_values("PASSWORD"));
             System.out.println("Login successful");
 
