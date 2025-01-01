@@ -72,9 +72,9 @@ jobs:
       # Step 9: Make chromedriver.exe executable with Wine
       - name: Make chromedriver.exe executable with Wine
         run: |
-          sudo wine src/test/resources/driver/chromedriver.exe --version
-          sudo chmod +x src/test/resources/driver/chromedriver.exe
-          echo "Using chromedriver located at: src/test/resources/driver/chromedriver.exe"
+          sudo wine UI/src/test/resources/driver/chromedriver.exe --version
+          sudo chmod +x UI/src/test/resources/driver/chromedriver.exe
+          echo "Using chromedriver located at: UI/src/test/resources/driver/chromedriver.exe"
 
       # Step 10: Run tests and generate Allure results
       - name: Run tests and generate Allure results
