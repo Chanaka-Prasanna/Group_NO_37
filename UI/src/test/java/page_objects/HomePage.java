@@ -49,6 +49,9 @@ public class HomePage {
 
     By googlePlayLink = By.xpath("/html/body/div[7]/div[1]/div[3]/div/div[1]/a[1]");
     By appStoreLink = By.xpath("/html/body/div[7]/div[1]/div[3]/div/div[1]/a[2]");
+
+    By giftingLink = By.xpath("//*[@id=\"footerCategory\"]/li[23]/a");
+    By stationeryLink = By.xpath("//*[@id=\"footerCategory\"]/li[28]/a");
     WebDriver driver;
 
     public HomePage(WebDriver driver) {
@@ -70,6 +73,29 @@ public class HomePage {
         categoryElement.click();
         return new CategoryPage(driver);
     }
+
+    public CategoryPage selectCategoryInFooter(String category) {
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        WebElement categoryElement;
+
+        if (category.equalsIgnoreCase("Gifting")) {
+            categoryElement = wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[@id=\"footerCategory\"]/li[23]/a")));
+        } else if (category.equalsIgnoreCase("Stationery")) {
+            categoryElement = wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[@id=\"footerCategory\"]/li[28]/a")));
+        } else {
+            throw new IllegalArgumentException("Unknown category: " + category);
+        }
+
+        // Scroll the element into view
+        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});", categoryElement);
+
+        // Use JavaScript to click the element
+        ((JavascriptExecutor) driver).executeScript("arguments[0].click();", categoryElement);
+
+        return new CategoryPage(driver);
+    }
+
+
 
     public void clickSocialMediaIcon(String socialMedia) {
         By path = switch (socialMedia.toLowerCase()) {

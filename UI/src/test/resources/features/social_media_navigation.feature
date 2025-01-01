@@ -7,5 +7,5 @@ Feature: Social Media Icons Navigation
 
     Examples:
       | socialMedia   | expectedURL                                  |
-      | Facebook      | https://www.facebook.com/cargillsonline      |
+      | Facebook      | https://web.facebook.com/cargillsonline      |
       | Instagram     | https://www.instagram.com/cargillsonline/    |
