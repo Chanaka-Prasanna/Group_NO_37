@@ -5,10 +5,9 @@ import org.openqa.selenium.WebDriver;
 
 public class Login {
 
-
     By username_path    =  By.id("txtUser");
     By password_path    =  By.xpath("//*[@id=\"txtPwd\"]");
-    By login_btn_path   =  By. id("btnSign");
+    By login_btn_path   =  By.id("btnSign");
     By my_acc_path      =  By.id("spnAcc");
 
     WebDriver driver;
