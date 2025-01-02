@@ -34,8 +34,16 @@ jobs:
           key: ${{ runner.os }}-maven-${{ hashFiles('**/UI/pom.xml') }}
           restore-keys: |
             ${{ runner.os }}-maven-
+            
+      # Step 4: Create .env file in UI directory
+      - name: Create .env file
+        working-directory: UI
+        run: |
+          echo "BASE_URL=https://cargillsonline.com/" > .env
+          echo "LOGIN_TEXT=geshanpasindu4@gmail.com" >> .env
+          echo "PASSWORD=Gesh@1234" >> .env      
 
-      # Step 4: Install Latest Google Chrome
+      # Step 5: Install Latest Google Chrome
       - name: Install Latest Google Chrome
         run: |
           wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
@@ -78,6 +86,7 @@ jobs:
       - name: Install Maven dependencies
         run: mvn install -DskipTests
         working-directory: UI
+
 
       # Step 10: Run tests in headless mode and generate Allure results
       - name: Run tests and generate Allure results
