@@ -48,10 +48,11 @@ jobs:
           CHROMEDRIVER_URL="https://storage.googleapis.com/chrome-for-testing-public/131.0.6778.204/linux64/chromedriver-linux64.zip"
           echo "Downloading ChromeDriver from ${CHROMEDRIVER_URL}"
           wget -N "${CHROMEDRIVER_URL}" -P /tmp
-          unzip /tmp/chromedriver-linux64.zip -d /tmp
+          unzip /tmp/chromedriver-linux64.zip -d /tmp/chromedriver-linux64/
           mkdir -p UI/src/test/resources/driver/
-          mv /tmp/chromedriver UI/src/test/resources/driver/chromedriver
+          mv /tmp/chromedriver-linux64/chromedriver UI/src/test/resources/driver/chromedriver
           chmod +x UI/src/test/resources/driver/chromedriver
+
 
 
       # Step 7: Install XVFB for GUI
