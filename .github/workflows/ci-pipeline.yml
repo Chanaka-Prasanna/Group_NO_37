@@ -63,8 +63,8 @@ jobs:
           curl -X POST http://localhost:7081/api/books \
             -H "Content-Type: application/json" \
             -u admin:password \
-            -d '{"id": 5, "title": "The Catcher in the Rye", "author": "Jerome David Salinger"}    
-        
+            -d '{"id": 5, "title": "The Catcher in the Rye", "author": "Jerome David Salinger"}'
+   
       # Step 4: Create .env file in UI directory
       - name: Create .env file
         working-directory: UI
