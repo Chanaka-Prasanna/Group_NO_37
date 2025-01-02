@@ -103,7 +103,7 @@ jobs:
         if: always()  # This ensures the step runs even if tests fail
         run: |
           npm install -g allure-commandline --force
-          allure generate target/allure-results -o target/allure-report --clean
+          allure generate UI/target/allure-results -o UI/target/allure-report --clean
         working-directory: UI
 
       # Step 12: Upload Allure HTML report as an artifact
