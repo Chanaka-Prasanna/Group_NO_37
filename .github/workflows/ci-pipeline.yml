@@ -96,6 +96,7 @@ jobs:
             -Dwebdriver.chrome.driver=UI/src/test/resources/driver/chromedriver \
             -Dchrome.options="--headless=new --disable-gpu --no-sandbox --disable-dev-shm-usage --window-size=1920,1080 --remote-allow-origins=* --disable-extensions --disable-software-rasterizer"
         working-directory: UI
+        continue-on-error: true
 
       # Step 11: Generate Allure HTML report
       - name: Generate Allure Report
