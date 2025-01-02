@@ -2,10 +2,10 @@ name: FrontEnd Report Pipeline
 on:
   push:
     branches:
-      - 204175A
+      - main
   pull_request:
     branches:
-      - 204175A
+      - main
 
 jobs:
   build-and-test:
@@ -150,7 +150,7 @@ jobs:
 
       # Step 9: Deploy Combined Allure Report to GitHub Pages
       - name: Deploy Combined Allure Report to GitHub Pages
-        if: success() && github.ref == 'refs/heads/204175A'
+        if: success() && github.ref == 'refs/heads/main'
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           branch: gh-pages
