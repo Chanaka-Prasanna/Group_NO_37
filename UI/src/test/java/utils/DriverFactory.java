@@ -1,6 +1,7 @@
 package utils;
 
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.chrome.ChromeDriver;
 
 public class DriverFactory {
@@ -11,6 +12,11 @@ public class DriverFactory {
         if(driver == null){
 //            System.setProperty("webdriver.chrome.driver","src/test/resources/driver/chromedriver.exe");
 //            driver = new ChromeDriver();
+            ChromeOptions options = new ChromeOptions();
+            options.addArguments("--headless"); // Run in headless mode
+            options.addArguments("--no-sandbox"); // Disable sandboxing (needed in CI)
+            options.addArguments("--disable-dev-shm-usage"); // Disable shared memory usage
+            options.addArguments("--remote-debugging-port=9222");
 
             String os = System.getProperty("os.name").toLowerCase();
             String driverPath = "src/test/resources/driver/chromedriver";
