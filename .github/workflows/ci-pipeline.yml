@@ -107,7 +107,7 @@ jobs:
         
       # Debug Step: Verify Allure Report Folder
       - name: Debug Allure Report Folder
-      run: ls -R UI/target/allure-report
+        run: ls -R UI/target/allure-report
    
 
       # Step 12: Upload Allure HTML report as an artifact
