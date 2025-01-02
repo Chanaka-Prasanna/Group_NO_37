@@ -2,11 +2,11 @@ package stepDefinitions;
 import io.cucumber.java.en.When;
 import io.restassured.RestAssured;
 
-public class postSteps {
+public class PostSteps {
 
-        private final sharedState sharedState;
+        private final SharedState sharedState;
 
-        public postSteps(sharedState sharedState){
+        public PostSteps(SharedState sharedState){
             this.sharedState = sharedState;
         }
 

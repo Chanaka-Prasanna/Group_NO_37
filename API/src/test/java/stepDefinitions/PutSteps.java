@@ -2,13 +2,12 @@ package stepDefinitions;
 
 import io.cucumber.java.en.When;
 import io.restassured.RestAssured;
-import io.restassured.response.Response;
 
-public class putSteps{
+public class PutSteps {
 
-    private final sharedState sharedState;
+    private final SharedState sharedState;
 
-    public putSteps(sharedState sharedState) {
+    public PutSteps(SharedState sharedState) {
         this.sharedState = sharedState;
     }
     @When("I send a PUT request to {string} with body:")

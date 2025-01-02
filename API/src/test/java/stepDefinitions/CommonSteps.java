@@ -2,13 +2,13 @@ package stepDefinitions;
 
 import io.cucumber.java.en.*;
 import io.restassured.RestAssured;
-import io.restassured.response.Response;
+
 import static org.testng.Assert.assertEquals;
 
-public class commonSteps {
-    private final sharedState sharedState;
+public class CommonSteps {
+    private final SharedState sharedState;
 
-    public commonSteps(sharedState sharedState) {
+    public CommonSteps(SharedState sharedState) {
         this.sharedState = sharedState;
     }
 

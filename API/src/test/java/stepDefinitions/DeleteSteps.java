@@ -3,18 +3,20 @@ package stepDefinitions;
 import io.cucumber.java.en.When;
 import io.restassured.RestAssured;
 
-public class getSteps {
-    private final sharedState sharedState;
+public class DeleteSteps {
+    private final SharedState sharedState;
 
-    public getSteps(sharedState sharedState) {
+    public DeleteSteps(SharedState sharedState) {
         this.sharedState = sharedState;
     }
 
-    @When("I send a GET request to {string}")
-    public void iSendAGETRequestTo(String endpoint) {
+    @When("I send a DELETE request to {string}")
+    public void iSendADELETERequestTo(String endpoint) {
         sharedState.response = RestAssured.given()
                 .auth().basic(sharedState.username, sharedState.password)
                 .when()
-                .get(endpoint);
+                .delete(endpoint);
     }
+
+
 }
