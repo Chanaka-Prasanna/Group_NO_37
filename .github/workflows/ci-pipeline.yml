@@ -33,19 +33,32 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-maven-
 
-      # Step 4: Install Chrome Dependencies
-      - name: Install Chrome Dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y libappindicator3-1 fonts-liberation xdg-utils
-
-      # Step 5: Install Specific Version of Google Chrome
+      # Step 5: Install Latest Google Chrome
       - name: Install Google Chrome
         run: |
           wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
-          sudo sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list'
+          sudo sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list'
           sudo apt-get update
-          sudo apt-get install -y google-chrome-stable=117.0.5938.132-1
+          sudo apt-get install -y google-chrome-stable
+
+      # Step 6: Install ChromeDriver Matching Chrome Version
+      - name: Install ChromeDriver
+        run: |
+          # Fetch the version of the installed Chrome
+          CHROME_VERSION=$(google-chrome --version | awk '{print $3}' | cut -d '.' -f 1-3)
+          echo "Detected Chrome version: $CHROME_VERSION"
+
+          # Fetch the corresponding ChromeDriver version
+          CHROMEDRIVER_VERSION=$(curl -s "https://chromedriver.storage.googleapis.com/LATEST_RELEASE_$CHROME_VERSION")
+          echo "Matching ChromeDriver version: $CHROMEDRIVER_VERSION"
+
+          # Download and unzip the appropriate ChromeDriver version
+          wget -N "https://chromedriver.storage.googleapis.com/${CHROMEDRIVER_VERSION}/chromedriver_linux64.zip" -P /tmp
+          unzip /tmp/chromedriver_linux64.zip -d /tmp
+          mkdir -p UI/src/test/resources/driver/
+          mv /tmp/chromedriver UI/src/test/resources/driver/chromedriver
+          chmod +x UI/src/test/resources/driver/chromedriver
+
 
       # Step 6: Install Specific ChromeDriver Version
       - name: Install ChromeDriver
