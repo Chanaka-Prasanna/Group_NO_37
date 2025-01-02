@@ -32,67 +32,66 @@ jobs:
           key: ${{ runner.os }}-maven-${{ hashFiles('**/UI/pom.xml') }}
           restore-keys: |
             ${{ runner.os }}-maven-
-      
+
+      # Step 4: Install Chrome Dependencies
       - name: Install Chrome Dependencies
         run: |
           sudo apt-get update
           sudo apt-get install -y libappindicator3-1 fonts-liberation xdg-utils
 
-      # Step 4: Install Google Chrome (latest stable version)
+      # Step 5: Install Specific Version of Google Chrome
       - name: Install Google Chrome
         run: |
           wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
           sudo sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list'
           sudo apt-get update
-          sudo apt-get install -y google-chrome-stable
+          sudo apt-get install -y google-chrome-stable=117.0.5938.132-1
 
-      # Step 5: Install Latest ChromeDriver (latest stable version)
-      - name: Install Latest ChromeDriver
+      # Step 6: Install Specific ChromeDriver Version
+      - name: Install ChromeDriver
         run: |
-          # Fetch the latest stable ChromeDriver version
-          CHROMEDRIVER_VERSION=$(curl -s "https://chromedriver.storage.googleapis.com/LATEST_RELEASE")
-          echo "Detected ChromeDriver version: $CHROMEDRIVER_VERSION"
-
-          # Download and unzip the appropriate ChromeDriver version
+          CHROMEDRIVER_VERSION=117.0.5938.132
           wget -N "https://chromedriver.storage.googleapis.com/${CHROMEDRIVER_VERSION}/chromedriver_linux64.zip" -P /tmp
           unzip /tmp/chromedriver_linux64.zip -d /tmp
-
-          # Move to the correct path
           mkdir -p UI/src/test/resources/driver/
           mv /tmp/chromedriver UI/src/test/resources/driver/chromedriver
           chmod +x UI/src/test/resources/driver/chromedriver
-          echo "ChromeDriver placed at UI/src/test/resources/driver/chromedriver"
-       
-      - name: Install XVFB for GUI
+
+      # Step 7: Install XVFB for GUI
+      - name: Install XVFB
         run: |
           sudo apt-get install -y xvfb
           export DISPLAY=:99
-          nohup Xvfb :99 -ac &
- 
+          nohup Xvfb :99 -screen 0 1920x1080x24 &
 
-      # Step 6: Install Maven dependencies
+      # Step 8: Verify Chrome and ChromeDriver Versions
+      - name: Verify Chrome and ChromeDriver Versions
+        run: |
+          google-chrome --version
+          UI/src/test/resources/driver/chromedriver --version
+
+      # Step 9: Install Maven dependencies
       - name: Install Maven dependencies
         run: mvn install -DskipTests
         working-directory: UI
-        
 
-      # Step 7: Run tests in headless mode and generate Allure results
+      # Step 10: Run tests in headless mode and generate Allure results
       - name: Run tests and generate Allure results
         run: |
           mvn test -Dsurefire.suiteXmlFiles=testng.xml \
             -Dallure.results.directory=target/allure-results \
             -Dwebdriver.chrome.driver=UI/src/test/resources/driver/chromedriver \
-            -Dchrome.options="--headless --no-sandbox --disable-dev-shm-usage"
+            -Dchrome.options="--headless --no-sandbox --disable-dev-shm-usage --disable-gpu --window-size=1920x1080"
         working-directory: UI
 
-      # Step 8: Generate Allure HTML report
+      # Step 11: Generate Allure HTML report
       - name: Generate Allure Report
         run: |
           npm install -g allure-commandline --force
           allure generate target/allure-results -o target/allure-report --clean
         working-directory: UI
 
-      # Step 9: Upload Allure HTML report as an artifact
+      # Step 12: Upload Allure HTML report as an artifact
       - name: Upload Allure Report
         uses: actions/upload-artifact@v3
         with:
