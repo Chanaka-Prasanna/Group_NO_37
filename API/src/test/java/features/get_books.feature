@@ -8,7 +8,7 @@ Scenarios to validate GET request using Basic Authentication.
 
   Scenario: Fetch book details for a invalid book ID as a User
     Given I logged in to the system with user credentials
-    When I send a GET request to "/api/books/99"
+    When I send a GET request to "/api/books/100"
     Then I should receive a 404 status code
 
   Scenario: Fetch all book details as an Admin
@@ -16,9 +16,9 @@ Scenarios to validate GET request using Basic Authentication.
     When I send a GET request to "/api/books"
     Then I should receive a 200 status code
 
-  Scenario: Fetch book details for a valid book ID as an Admin
+  Scenario: Fetch book details for a invalid book ID as an Admin
     Given I logged in to the system with admin credentials
-    When I send a GET request to "/api/books/99"
+    When I send a GET request to "/api/books/100"
     Then I should receive a 404 status code
 
     # Check API access when a user does not provide a username and password
