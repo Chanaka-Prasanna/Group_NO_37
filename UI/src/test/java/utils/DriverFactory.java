@@ -11,7 +11,7 @@ public class DriverFactory {
         if(driver == null){
 //            System.setProperty("webdriver.chrome.driver","src/test/resources/driver/chromedriver.exe");
 //            driver = new ChromeDriver();
-            
+
             String os = System.getProperty("os.name").toLowerCase();
             String driverPath = "src/test/resources/driver/chromedriver";
 
