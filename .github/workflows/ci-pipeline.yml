@@ -120,7 +120,7 @@ jobs:
       # Step 6: Run API tests and generate Allure results
       - name: Run API tests and generate Allure results
         run: |
-          mvn test -Dsurefire.suiteXmlFiles=testng.xml \
+          mvn test -Dtest=runner.TestNGCucumberRunner \
             -Dallure.results.directory=target/allure-results
         working-directory: API
         continue-on-error: true  
