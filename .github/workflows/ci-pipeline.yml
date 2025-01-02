@@ -1,4 +1,4 @@
-name: FrontEnd Report Pipeline
+name: Allure Report Pipeline
 on:
   push:
     branches:
