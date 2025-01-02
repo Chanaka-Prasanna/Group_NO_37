@@ -1,0 +1,27 @@
+"DESCRIPTION","DURATION IN MS","NAME","PARENT SUITE","START TIME","STATUS","STOP TIME","SUB SUITE","SUITE","TEST CLASS","TEST METHOD"
+"","2095","User searches for multiple-word terms","","Thu Jan 02 12:02:51 UTC 2025","passed","Thu Jan 02 12:02:53 UTC 2025","","Search Bar Functionality","User searches for multiple-word terms",""
+"","2486","User searches for multiple-word terms","","Thu Jan 02 12:02:53 UTC 2025","passed","Thu Jan 02 12:02:56 UTC 2025","","Search Bar Functionality","User searches for multiple-word terms",""
+"","8066","Display quantity selector when Add button is clicked","","Thu Jan 02 12:02:27 UTC 2025","broken","Thu Jan 02 12:02:35 UTC 2025","","Product Card","Display quantity selector when Add button is clicked",""
+"  As a user, I want to clear cart","2203","Clear all products from the cart","","Thu Jan 02 12:03:23 UTC 2025","failed","Thu Jan 02 12:03:25 UTC 2025","","Clear all products from the cart","Clear all products from the cart",""
+"  This feature tests the login functionality by verifying different scenarios such as valid login,
+   invalid credentials, and missing inputs.","1992","Verify login functionality by valid and invalid credentials","","Thu Jan 02 12:03:25 UTC 2025","failed","Thu Jan 02 12:03:27 UTC 2025","","Login Page Testing","Verify login functionality by valid and invalid credentials",""
+"  As a user,
+  I want to navigate through categories
+  So that I can view products under those categories.","12090","Navigate to a category and verify products are displayed","","Thu Jan 02 12:03:11 UTC 2025","passed","Thu Jan 02 12:03:23 UTC 2025","","Category Navigation","Navigate to a category and verify products are displayed",""
+"  As a user,
+  I want to navigate through categories
+  So that I can view products under those categories.","12071","Navigate to a category and verify products are displayed","","Thu Jan 02 12:02:59 UTC 2025","passed","Thu Jan 02 12:03:11 UTC 2025","","Category Navigation","Navigate to a category and verify products are displayed",""
+"","5077","Verify each link in the My Account dropdown","","Thu Jan 02 12:03:27 UTC 2025","passed","Thu Jan 02 12:03:32 UTC 2025","","My Account Dropdown Links","Verify each link in the My Account dropdown",""
+"","1598","Apply filters and validate the results","","Thu Jan 02 12:02:20 UTC 2025","passed","Thu Jan 02 12:02:22 UTC 2025","","Filter Menu Functionality","Apply filters and validate the results",""
+"  As a user, I want to add products to my cart so that I can purchase them later.","1627","Add a product to the cart","","Thu Jan 02 12:02:57 UTC 2025","failed","Thu Jan 02 12:02:59 UTC 2025","","Add to Cart","Add a product to the cart",""
+"  As a user, I should be able to update my profile.","1560","Successfully update user profile","","Thu Jan 02 12:04:20 UTC 2025","failed","Thu Jan 02 12:04:21 UTC 2025","","Update User Profile","Successfully update user profile",""
+"","1567","Successfully add a new address","","Thu Jan 02 12:02:56 UTC 2025","failed","Thu Jan 02 12:02:57 UTC 2025","","Adding an address","Successfully add a new address",""
+"  As a user, I want to manage my saved addresses so that I can delete unnecessary ones.","1635","Remove an existing address","","Thu Jan 02 12:03:32 UTC 2025","failed","Thu Jan 02 12:03:34 UTC 2025","","Remove an existing address","Remove an existing address",""
+"","9138","Navigate to product details page","","Thu Jan 02 12:02:35 UTC 2025","passed","Thu Jan 02 12:02:44 UTC 2025","","Product Card","Navigate to product details page",""
+"","3826","User searches for multiple-word terms","","Thu Jan 02 12:02:44 UTC 2025","passed","Thu Jan 02 12:02:48 UTC 2025","","Search Bar Functionality","User searches for multiple-word terms",""
+"","3134","User searches for multiple-word terms","","Thu Jan 02 12:02:48 UTC 2025","passed","Thu Jan 02 12:02:51 UTC 2025","","Search Bar Functionality","User searches for multiple-word terms",""
+"","1946","Apply filters and validate the results","","Thu Jan 02 12:02:22 UTC 2025","passed","Thu Jan 02 12:02:24 UTC 2025","","Filter Menu Functionality","Apply filters and validate the results",""
+"","1574","Apply filters and validate the results","","Thu Jan 02 12:02:24 UTC 2025","passed","Thu Jan 02 12:02:25 UTC 2025","","Filter Menu Functionality","Apply filters and validate the results",""
+"","45758","Validate all brand items","","Thu Jan 02 12:03:34 UTC 2025","passed","Thu Jan 02 12:04:20 UTC 2025","","Shop By Brand","Validate all brand items",""
+"","1538","Clear all filters after applying a combination","","Thu Jan 02 12:02:25 UTC 2025","broken","Thu Jan 02 12:02:27 UTC 2025","","Filter Menu Functionality","Clear all filters after applying a combination",""
+"","2367","Apply filters and validate the results","","Thu Jan 02 12:02:18 UTC 2025","passed","Thu Jan 02 12:02:20 UTC 2025","","Filter Menu Functionality","Apply filters and validate the results",""
