@@ -89,6 +89,16 @@ jobs:
       - name: Install Maven dependencies
         run: mvn install -DskipTests
         working-directory: UI
+        
+      # Step 13: Run tests and generate Allure results
+      - name: Run tests in headless mode and generate Allure results
+        run: |
+          mvn test -Dsurefire.suiteXmlFiles=testng.xml \
+            -Dallure.results.directory=target/allure-results \
+            -Dwebdriver.chrome.driver=UI/src/test/resources/driver/chromedriver.exe \
+            -Dchrome.options="--headless --no-sandbox --disable-dev-shm-usage"
+        working-directory: UI
+  
 
       # Step 13: Run tests and generate Allure results
       - name: Run tests and generate Allure results
