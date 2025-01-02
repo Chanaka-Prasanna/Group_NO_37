@@ -1,0 +1,27 @@
+"DESCRIPTION","DURATION IN MS","NAME","PARENT SUITE","START TIME","STATUS","STOP TIME","SUB SUITE","SUITE","TEST CLASS","TEST METHOD"
+"","8604","Display quantity selector when Add button is clicked","","Thu Jan 02 12:29:38 UTC 2025","broken","Thu Jan 02 12:29:47 UTC 2025","","Product Card","Display quantity selector when Add button is clicked",""
+"","1627","Apply filters and validate the results","","Thu Jan 02 12:29:35 UTC 2025","passed","Thu Jan 02 12:29:37 UTC 2025","","Filter Menu Functionality","Apply filters and validate the results",""
+"","4790","User searches for multiple-word terms","","Thu Jan 02 12:30:00 UTC 2025","passed","Thu Jan 02 12:30:05 UTC 2025","","Search Bar Functionality","User searches for multiple-word terms",""
+"  As a user, I want to add products to my cart so that I can purchase them later.","1711","Add a product to the cart","","Thu Jan 02 12:30:13 UTC 2025","failed","Thu Jan 02 12:30:15 UTC 2025","","Add to Cart","Add a product to the cart",""
+"","1638","Clear all filters after applying a combination","","Thu Jan 02 12:29:37 UTC 2025","broken","Thu Jan 02 12:29:38 UTC 2025","","Filter Menu Functionality","Clear all filters after applying a combination",""
+"  As a user,
+  I want to navigate through categories
+  So that I can view products under those categories.","12171","Navigate to a category and verify products are displayed","","Thu Jan 02 12:30:27 UTC 2025","passed","Thu Jan 02 12:30:39 UTC 2025","","Category Navigation","Navigate to a category and verify products are displayed",""
+"","2439","User searches for multiple-word terms","","Thu Jan 02 12:30:09 UTC 2025","passed","Thu Jan 02 12:30:11 UTC 2025","","Search Bar Functionality","User searches for multiple-word terms",""
+"","4007","User searches for multiple-word terms","","Thu Jan 02 12:29:56 UTC 2025","passed","Thu Jan 02 12:30:00 UTC 2025","","Search Bar Functionality","User searches for multiple-word terms",""
+"","1597","Apply filters and validate the results","","Thu Jan 02 12:29:31 UTC 2025","passed","Thu Jan 02 12:29:33 UTC 2025","","Filter Menu Functionality","Apply filters and validate the results",""
+"","1665","Successfully add a new address","","Thu Jan 02 12:30:11 UTC 2025","failed","Thu Jan 02 12:30:13 UTC 2025","","Adding an address","Successfully add a new address",""
+"","4368","Apply filters and validate the results","","Thu Jan 02 12:29:27 UTC 2025","passed","Thu Jan 02 12:29:31 UTC 2025","","Filter Menu Functionality","Apply filters and validate the results",""
+"  As a user, I want to manage my saved addresses so that I can delete unnecessary ones.","1535","Remove an existing address","","Thu Jan 02 12:30:48 UTC 2025","failed","Thu Jan 02 12:30:49 UTC 2025","","Remove an existing address","Remove an existing address",""
+"  This feature tests the login functionality by verifying different scenarios such as valid login,
+   invalid credentials, and missing inputs.","1642","Verify login functionality by valid and invalid credentials","","Thu Jan 02 12:30:41 UTC 2025","failed","Thu Jan 02 12:30:43 UTC 2025","","Login Page Testing","Verify login functionality by valid and invalid credentials",""
+"","9608","Navigate to product details page","","Thu Jan 02 12:29:47 UTC 2025","passed","Thu Jan 02 12:29:56 UTC 2025","","Product Card","Navigate to product details page",""
+"","1814","Apply filters and validate the results","","Thu Jan 02 12:29:33 UTC 2025","passed","Thu Jan 02 12:29:35 UTC 2025","","Filter Menu Functionality","Apply filters and validate the results",""
+"  As a user, I should be able to update my profile.","1952","Successfully update user profile","","Thu Jan 02 12:31:34 UTC 2025","failed","Thu Jan 02 12:31:36 UTC 2025","","Update User Profile","Successfully update user profile",""
+"","5350","Verify each link in the My Account dropdown","","Thu Jan 02 12:30:43 UTC 2025","passed","Thu Jan 02 12:30:48 UTC 2025","","My Account Dropdown Links","Verify each link in the My Account dropdown",""
+"","44092","Validate all brand items","","Thu Jan 02 12:30:49 UTC 2025","passed","Thu Jan 02 12:31:34 UTC 2025","","Shop By Brand","Validate all brand items",""
+"  As a user, I want to clear cart","1660","Clear all products from the cart","","Thu Jan 02 12:30:39 UTC 2025","failed","Thu Jan 02 12:30:41 UTC 2025","","Clear all products from the cart","Clear all products from the cart",""
+"","3682","User searches for multiple-word terms","","Thu Jan 02 12:30:05 UTC 2025","passed","Thu Jan 02 12:30:09 UTC 2025","","Search Bar Functionality","User searches for multiple-word terms",""
+"  As a user,
+  I want to navigate through categories
+  So that I can view products under those categories.","12189","Navigate to a category and verify products are displayed","","Thu Jan 02 12:30:15 UTC 2025","passed","Thu Jan 02 12:30:27 UTC 2025","","Category Navigation","Navigate to a category and verify products are displayed",""
