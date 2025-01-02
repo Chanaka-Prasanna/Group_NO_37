@@ -33,8 +33,8 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-maven-
 
-      # Step 5: Install Google Chrome
-      - name: Install Google Chrome
+      # Step 5: Install Latest Google Chrome
+      - name: Install Latest Google Chrome
         run: |
           wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
           sudo sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list'
@@ -42,46 +42,17 @@ jobs:
           sudo apt-get install -y google-chrome-stable
           google-chrome --version
 
-      # Step 6: Install ChromeDriver Matching Chrome Version
-      - name: Install ChromeDriver
+      # Step 6: Install Specific ChromeDriver
+      - name: Install ChromeDriver for Chrome 131.0.6778.204
         run: |
-          # Validate Chrome Installation
-          if ! google-chrome --version; then
-            echo "Google Chrome installation failed!" >&2
-            exit 1
-          fi
-
-          # Fetch the version of installed Chrome
-          CHROME_VERSION=$(google-chrome --version | awk '{print $3}' | cut -d '.' -f 1)
-          echo "Detected major Chrome version: $CHROME_VERSION"
-
-          # Fetch corresponding ChromeDriver version
-          CHROMEDRIVER_VERSION=$(curl -s "https://chromedriver.storage.googleapis.com/LATEST_RELEASE_${CHROME_VERSION}")
-          if [ -z "$CHROMEDRIVER_VERSION" ]; then
-            echo "No matching ChromeDriver version found for Chrome version ${CHROME_VERSION}!" >&2
-            exit 1
-          fi
-
-          echo "Matching ChromeDriver version: $CHROMEDRIVER_VERSION"
-
-          # Download and unzip the appropriate ChromeDriver version
-          wget -N "https://chromedriver.storage.googleapis.com/${CHROMEDRIVER_VERSION}/chromedriver_linux64.zip" -P /tmp
-          unzip /tmp/chromedriver_linux64.zip -d /tmp
+          CHROMEDRIVER_URL="https://storage.googleapis.com/chrome-for-testing-public/131.0.6778.204/linux64/chromedriver-linux64.zip"
+          echo "Downloading ChromeDriver from ${CHROMEDRIVER_URL}"
+          wget -N "${CHROMEDRIVER_URL}" -P /tmp
+          unzip /tmp/chromedriver-linux64.zip -d /tmp
           mkdir -p UI/src/test/resources/driver/
           mv /tmp/chromedriver UI/src/test/resources/driver/chromedriver
           chmod +x UI/src/test/resources/driver/chromedriver
 
-
-
-      # Step 6: Install Specific ChromeDriver Version
-      - name: Install ChromeDriver
-        run: |
-          CHROMEDRIVER_VERSION=117.0.5938.132
-          wget -N "https://chromedriver.storage.googleapis.com/${CHROMEDRIVER_VERSION}/chromedriver_linux64.zip" -P /tmp
-          unzip /tmp/chromedriver_linux64.zip -d /tmp
-          mkdir -p UI/src/test/resources/driver/
-          mv /tmp/chromedriver UI/src/test/resources/driver/chromedriver
-          chmod +x UI/src/test/resources/driver/chromedriver
 
       # Step 7: Install XVFB for GUI
       - name: Install XVFB
