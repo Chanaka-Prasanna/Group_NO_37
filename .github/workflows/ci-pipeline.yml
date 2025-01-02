@@ -32,6 +32,11 @@ jobs:
           key: ${{ runner.os }}-maven-${{ hashFiles('**/UI/pom.xml') }}
           restore-keys: |
             ${{ runner.os }}-maven-
+      
+      - name: Install Chrome Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libappindicator3-1 fonts-liberation xdg-utils
 
       # Step 4: Install Google Chrome (latest stable version)
       - name: Install Google Chrome
@@ -57,11 +62,19 @@ jobs:
           mv /tmp/chromedriver UI/src/test/resources/driver/chromedriver
           chmod +x UI/src/test/resources/driver/chromedriver
           echo "ChromeDriver placed at UI/src/test/resources/driver/chromedriver"
+       
+      - name: Install XVFB for GUI
+        run: |
+          sudo apt-get install -y xvfb
+          export DISPLAY=:99
+          nohup Xvfb :99 -ac &
+ 
 
       # Step 6: Install Maven dependencies
       - name: Install Maven dependencies
         run: mvn install -DskipTests
         working-directory: UI
+        
 
       # Step 7: Run tests in headless mode and generate Allure results
       - name: Run tests and generate Allure results
