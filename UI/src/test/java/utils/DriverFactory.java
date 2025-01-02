@@ -13,10 +13,14 @@ public class DriverFactory {
 //            System.setProperty("webdriver.chrome.driver","src/test/resources/driver/chromedriver.exe");
 //            driver = new ChromeDriver();
             ChromeOptions options = new ChromeOptions();
-            options.addArguments("--headless"); // Run in headless mode
-            options.addArguments("--no-sandbox"); // Disable sandboxing (needed in CI)
-            options.addArguments("--disable-dev-shm-usage"); // Disable shared memory usage
-            options.addArguments("--remote-debugging-port=9222");
+            options.addArguments("--headless=new");
+            options.addArguments("--no-sandbox");
+            options.addArguments("--disable-dev-shm-usage");
+            options.addArguments("--disable-gpu");
+            options.addArguments("--window-size=1920,1080");
+            options.addArguments("--remote-allow-origins=*");
+            options.addArguments("--disable-extensions");
+            options.addArguments("--disable-software-rasterizer");
 
             String os = System.getProperty("os.name").toLowerCase();
             String driverPath = "src/test/resources/driver/chromedriver";

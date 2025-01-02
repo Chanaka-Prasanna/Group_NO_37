@@ -11,6 +11,9 @@ on:
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
+  env:
+      DISPLAY: :99
+      CHROME_BIN: /usr/bin/google-chrome  
 
     steps:
       # Step 1: Checkout code
@@ -75,12 +78,12 @@ jobs:
 
       # Step 10: Run tests in headless mode and generate Allure results
       - name: Run tests and generate Allure results
-        run: |
-          mvn test -Dsurefire.suiteXmlFiles=testng.xml \
-            -Dallure.results.directory=target/allure-results \
-            -Dwebdriver.chrome.driver=UI/src/test/resources/driver/chromedriver \
-            -Dchrome.options="--headless --no-sandbox --disable-dev-shm-usage --disable-gpu --window-size=1920x1080"
-        working-directory: UI
+      run: |
+        mvn test -Dsurefire.suiteXmlFiles=testng.xml \
+          -Dallure.results.directory=target/allure-results \
+          -Dwebdriver.chrome.driver=UI/src/test/resources/driver/chromedriver \
+          -Dchrome.options="--headless=new --disable-gpu --no-sandbox --disable-dev-shm-usage --window-size=1920,1080 --remote-allow-origins=* --disable-extensions --disable-software-rasterizer"
+      working-directory: UI
 
       # Step 11: Generate Allure HTML report
       - name: Generate Allure Report
