@@ -87,7 +87,6 @@ jobs:
         run: mvn install -DskipTests
         working-directory: UI
 
-
       # Step 10: Run tests in headless mode and generate Allure results
       - name: Run tests and generate Allure results
         run: |
@@ -127,3 +126,12 @@ jobs:
             UI/target/surefire-reports/
             UI/target/logs/
             
+     # Step 14: Deploy Allure Report to GitHub Pages
+      - name: Deploy Allure Report to GitHub Pages
+        if: success() && github.ref == 'refs/heads/204175A'
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          branch: gh-pages
+          folder: UI/target/allure-report
+          clean: true
+          token: ${{ secrets.GITHUB_TOKEN }}       
