@@ -5,8 +5,8 @@ import io.cucumber.testng.CucumberOptions;
 @CucumberOptions(
         features = "src/test/java/features", // Path to feature files
         glue = "stepDefinitions", // Path to step definitions
-        plugin = {"pretty", "html:target/cucumber-reports.html"} // Reporting plugins
+        plugin = {"pretty","io.qameta.allure.cucumber7jvm.AllureCucumber7Jvm"} // Allure report plugins
 )
 
-public class testNGCucumberRunner extends AbstractTestNGCucumberTests{
+public class TestNGCucumberRunner extends AbstractTestNGCucumberTests{
 }
