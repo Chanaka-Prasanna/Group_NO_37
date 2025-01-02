@@ -1,5 +1,4 @@
 name: Selenium Cucumber TestNG Pipeline
-
 on:
   push:
     branches:
@@ -11,10 +10,10 @@ on:
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
-  env:
+    env:
       DISPLAY: :99
-      CHROME_BIN: /usr/bin/google-chrome  
-
+      CHROME_BIN: /usr/bin/google-chrome
+    
     steps:
       # Step 1: Checkout code
       - name: Checkout code
@@ -36,7 +35,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-maven-
 
-      # Step 5: Install Latest Google Chrome
+      # Step 4: Install Latest Google Chrome
       - name: Install Latest Google Chrome
         run: |
           wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
@@ -45,7 +44,7 @@ jobs:
           sudo apt-get install -y google-chrome-stable
           google-chrome --version
 
-            # Step 6: Install Specific ChromeDriver
+      # Step 5: Install Specific ChromeDriver
       - name: Install ChromeDriver for Chrome 131.0.6778.204
         run: |
           CHROMEDRIVER_URL="https://storage.googleapis.com/chrome-for-testing-public/131.0.6778.204/linux64/chromedriver-linux64.zip"
@@ -56,20 +55,24 @@ jobs:
           mv /tmp/chromedriver-linux64/chromedriver-linux64/chromedriver UI/src/test/resources/driver/chromedriver
           chmod +x UI/src/test/resources/driver/chromedriver
 
-
-
-      # Step 7: Install XVFB for GUI
+      # Step 6: Install XVFB for GUI
       - name: Install XVFB
         run: |
           sudo apt-get install -y xvfb
-          export DISPLAY=:99
-          nohup Xvfb :99 -screen 0 1920x1080x24 &
+          sudo Xvfb :99 -screen 0 1920x1080x24 > /dev/null 2>&1 &
+          sleep 3  # Give xvfb some time to start
 
-      # Step 8: Verify Chrome and ChromeDriver Versions
+      # Step 7: Verify Chrome and ChromeDriver Versions
       - name: Verify Chrome and ChromeDriver Versions
         run: |
           google-chrome --version
           UI/src/test/resources/driver/chromedriver --version
+
+      # Step 8: Set up Chrome for testing
+      - name: Set up Chrome for testing
+        run: |
+          sudo chown root:root /opt/google/chrome/chrome-sandbox
+          sudo chmod 4755 /opt/google/chrome/chrome-sandbox
 
       # Step 9: Install Maven dependencies
       - name: Install Maven dependencies
@@ -78,15 +81,16 @@ jobs:
 
       # Step 10: Run tests in headless mode and generate Allure results
       - name: Run tests and generate Allure results
-      run: |
-        mvn test -Dsurefire.suiteXmlFiles=testng.xml \
-          -Dallure.results.directory=target/allure-results \
-          -Dwebdriver.chrome.driver=UI/src/test/resources/driver/chromedriver \
-          -Dchrome.options="--headless=new --disable-gpu --no-sandbox --disable-dev-shm-usage --window-size=1920,1080 --remote-allow-origins=* --disable-extensions --disable-software-rasterizer"
-      working-directory: UI
+        run: |
+          mvn test -Dsurefire.suiteXmlFiles=testng.xml \
+            -Dallure.results.directory=target/allure-results \
+            -Dwebdriver.chrome.driver=UI/src/test/resources/driver/chromedriver \
+            -Dchrome.options="--headless=new --disable-gpu --no-sandbox --disable-dev-shm-usage --window-size=1920,1080 --remote-allow-origins=* --disable-extensions --disable-software-rasterizer"
+        working-directory: UI
 
       # Step 11: Generate Allure HTML report
       - name: Generate Allure Report
+        if: always()  # This ensures the step runs even if tests fail
         run: |
           npm install -g allure-commandline --force
           allure generate target/allure-results -o target/allure-report --clean
@@ -94,7 +98,18 @@ jobs:
 
       # Step 12: Upload Allure HTML report as an artifact
       - name: Upload Allure Report
+        if: always()  # This ensures the step runs even if tests fail
         uses: actions/upload-artifact@v3
         with:
           name: allure-report
           path: UI/target/allure-report
+
+      # Step 13: Upload test logs on failure
+      - name: Upload test logs
+        if: failure()
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-logs
+          path: |
+            UI/target/surefire-reports/
+            UI/target/logs/
