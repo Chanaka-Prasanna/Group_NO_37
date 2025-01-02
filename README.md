@@ -8,14 +8,17 @@
 4. Download Maven dependencies and load them.
 5. Install Scoop if your OS is Windows, Brew if your OS is macOS, and use `sudo` if your OS is Linux.
 6. Then install **Allure** - A reporting tool. Refer to the installation guide [here](https://allurereport.org/docs/install/).
-7. Make sure to add this in testing.xml 
+7. Make sure to add this in testing.xml
+
 ```bash
 <listeners>
     <listener class-name="io.qameta.allure.testng.AllureTestNg"/>
 </listeners>
 ```
+
 8. Run test cases using runner class
 9. Generate Allure report using this command
+
 ```bash
 allure serve target/allure-results
 
@@ -29,13 +32,22 @@ In the `UI/.env` file, set the following:
 BASE_URL=https://cargillsonline.com/
 ```
 
+## Allure properties
+
+In the `UI/src/test/resources/allure.properties` file, set the following:
+
+```env
+allure.results.directory=target/allure-results
+```
+
 ## Conducting UI Testing and API Testing
 
 ### UI Testing
+
 Tools/Frameworks:
+
 - Cucumber BDD Framework
 - TestNG
 - Selenium (WebDriver tool)
 
 ### Testing Site: [cargils online](https://cargillsonline.com/)
-
