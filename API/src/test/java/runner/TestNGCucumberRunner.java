@@ -8,5 +8,5 @@ import io.cucumber.testng.CucumberOptions;
         plugin = {"pretty","io.qameta.allure.cucumber7jvm.AllureCucumber7Jvm"} // Allure report plugins
 )
 
-public class testNGCucumberRunner extends AbstractTestNGCucumberTests{
+public class TestNGCucumberRunner extends AbstractTestNGCucumberTests{
 }

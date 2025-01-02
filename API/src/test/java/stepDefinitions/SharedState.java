@@ -1,6 +1,6 @@
 package stepDefinitions;
 
-public class sharedState {
+public class SharedState {
     public String username;
     public String password;
 
