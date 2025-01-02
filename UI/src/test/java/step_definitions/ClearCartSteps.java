@@ -134,6 +134,26 @@ public class ClearCartSteps {
 
     }
 
+    @And("All products should be removed from the cart")
+    @Step("All products should be removed from the cart")
+    public void all_products_should_be_removed_from_the_cart() {
+        try {
+            if (cart.isCartEmpty()){
+                Allure.step("Cart is cleared");
+            }else {
+
+                Allure.addAttachment("Something went wrong on clearing cart", new ByteArrayInputStream(((org.openqa.selenium.TakesScreenshot) driver).getScreenshotAs(org.openqa.selenium.OutputType.BYTES)));
+                Allure.step("Blocked - Something happened in clearing cart");
+                Assert.fail("Blocked - Something happened in clearing cart");
+            }
+        } catch (Exception e) {
+            Allure.addAttachment("Error Screenshot", new ByteArrayInputStream(((org.openqa.selenium.TakesScreenshot) driver).getScreenshotAs(org.openqa.selenium.OutputType.BYTES)));
+            Allure.step("Blocked - Exception on getting cleared the cart: " + e.getMessage());
+            Assert.fail("Blocked - Exception on getting cleared the cart");
+        }
+
+    }
+
 
     @After
     public void tear_down() {

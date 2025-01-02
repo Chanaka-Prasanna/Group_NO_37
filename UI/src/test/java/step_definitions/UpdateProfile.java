@@ -6,100 +6,86 @@ import io.cucumber.java.en.And;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.qameta.allure.Allure;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.Select;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
-import page_objects.Cart;
+import page_objects.Profile;
+import utils.Config;
 import utils.DriverFactory;
 
-import java.time.Duration;
+import java.io.ByteArrayInputStream;
 
 public class UpdateProfile {
-    WebDriver driver;
+    private WebDriver driver;
+    private Profile profile;
 
     @Before
     public void setup() {
-        driver = DriverFactory.get_driver();
+        this.driver = DriverFactory.get_driver();
     }
 
     @And("I navigate to the profile page")
     public void navigate_to_profile_page() {
         try {
-            driver.get("https://cargillsonline.com/ManageProfile");
-            By account_page_txt = By.xpath("//*[@id=\"divM\"]/div[1]/h3");
-            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
-            wait.until(ExpectedConditions.visibilityOfElementLocated(account_page_txt));
-            String actual = driver.findElement(account_page_txt).getText().trim();
+            driver.get(Config.env_values("BASE_URL") + "ManageProfile");
+            profile = new Profile(driver);
+
+            String actual = profile.get_profile_page_title();
             String expected = "My Account";
 
-
-            if(actual.equals(expected)){
+            if(actual.equals(expected)) {
                 Allure.step("Navigated to profile page");
-            }else{
+            } else {
+                Allure.addAttachment("Navigation Failed", new ByteArrayInputStream(
+                        ((org.openqa.selenium.TakesScreenshot) driver)
+                                .getScreenshotAs(org.openqa.selenium.OutputType.BYTES)));
                 Assert.fail("Failed to load my account page");
-
             }
-
         } catch (Exception e) {
-            Allure.step("Exception on navigating to my account");
+            Allure.addAttachment("Error Screenshot", new ByteArrayInputStream(
+                    ((org.openqa.selenium.TakesScreenshot) driver)
+                            .getScreenshotAs(org.openqa.selenium.OutputType.BYTES)));
+            Allure.step("Exception on navigating to my account: " + e.getMessage());
+            Assert.fail("Failed to navigate to my account page");
         }
     }
 
     @When("I update my profile information")
     public void update_profile_information() {
         try {
-            By f_name_path  = By.xpath("//*[@id=\"txtFirstName\"]");
-            By l_name_path  = By.xpath("//*[@id=\"txtLastName\"]");
-            By b_day_path   = By.xpath("//*[@id=\"txtDob\"]");
-            By gender_path  = By.xpath("//*[@id=\"ddlGender\"]");
-            By nic_path     = By.xpath("//*[@id=\"txtNIC\"]");
-
-
-            driver.findElement(f_name_path).sendKeys("Chanaka 1");
-            driver.findElement(l_name_path).sendKeys("ppasanna");
-            driver.findElement(b_day_path).sendKeys("01/12/2008");;
-            WebElement dropdown = driver.findElement(gender_path);
-            Select select = new Select(dropdown);
-            select.selectByVisibleText("Female");
-
-
-
-            if ( driver.findElement(nic_path).isDisplayed()){
-                driver.findElement(nic_path).sendKeys("200032569345");
-            }
-
-            driver.findElement(By.xpath("//*[@id=\"btnSave\"]")).click();
+            profile.update_profile();
+            profile.click_save();
             Allure.step("Profile information updated");
         } catch (Exception e) {
+            Allure.addAttachment("Error Screenshot", new ByteArrayInputStream(
+                    ((org.openqa.selenium.TakesScreenshot) driver)
+                            .getScreenshotAs(org.openqa.selenium.OutputType.BYTES)));
+            Allure.step("Failed to update profile: " + e.getMessage());
             Assert.fail("Failed to update profile");
-            Allure.step("Failed to update profile");
-
         }
-
     }
 
     @Then("I should see a success message")
-    public void i_should_see_a_success_message(){
-        try{
-
+    public void i_should_see_a_success_message() {
+        try {
             String expected = "Profile Updated successfully";
-            String actual =   driver.findElement(By.xpath("//*[@id=\"txtAlertText1\"]")).getText().trim();
+            String actual = profile.get_success_message();
 
-            if (expected.equals(actual)){
+            if (expected.equals(actual)) {
                 Allure.step("Profile is updated");
-
-            }else{
+            } else {
+                Allure.addAttachment("Update Failed", new ByteArrayInputStream(
+                        ((org.openqa.selenium.TakesScreenshot) driver)
+                                .getScreenshotAs(org.openqa.selenium.OutputType.BYTES)));
                 Assert.fail("Failed to update profile");
             }
         } catch (Exception e) {
+            Allure.addAttachment("Error Screenshot", new ByteArrayInputStream(
+                    ((org.openqa.selenium.TakesScreenshot) driver)
+                            .getScreenshotAs(org.openqa.selenium.OutputType.BYTES)));
+            Allure.step("Exception checking success message: " + e.getMessage());
             throw new RuntimeException(e);
         }
     }
-
 
     @After
     public void tear_down() {
@@ -110,7 +96,4 @@ public class UpdateProfile {
             Allure.step("Error closing driver: " + e.getMessage());
         }
     }
-
-
-
 }

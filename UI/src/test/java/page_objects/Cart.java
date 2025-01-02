@@ -1,6 +1,7 @@
 package page_objects;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -15,7 +16,7 @@ public class Cart {
     By product_page_txt =  By.xpath("//*[@id=\"h3head\"]/span[1]");
     By products_paths   =  By.xpath("//*[@id=\"divProducts\"]//*[@id=\"card_\"]");
     By product_path     =  By.xpath("//*[@id=\"card_\"]");
-    By add_to_cart_path =  By.xpath("//*[@id=\"crtAdd1242\"]/a");
+    By add_to_cart_path =  By.xpath("//*[@id=\"crtAdd1229\"]/a");
     By cart_bbl_path    =  By.xpath("//*[@id=\"divCartBubble\"]");
     By cart_icon_path   =  By.xpath("//*[@id=\"btnCart\"]/p/a");
     By products_div_path=  By.xpath("//*[@id=\"myCartItems\"]");
@@ -27,8 +28,11 @@ public class Cart {
 
     WebDriver driver;
 
+    WebDriverWait wait;
+
     public Cart(WebDriver driver){
         this.driver = driver;
+        this.wait = new WebDriverWait(driver, Duration.ofSeconds(15));
     }
 
     public String loggedIn(){
@@ -59,22 +63,46 @@ public class Cart {
 
     public void click_on_product(){
         try{
-            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
-            wait.until(ExpectedConditions.visibilityOfElementLocated(product_path));
 
+            wait.until(ExpectedConditions.visibilityOfElementLocated(product_path));
             driver.findElement(product_path).click();
         } catch (Exception e) {
+            System.out.println("Error : " + e.getMessage());
             throw new RuntimeException(e);
         }
     }
 
     public void click_on_add_to_cart(){
         try{
-//            We cant see the add button after cart is not empty-------> handle it
-            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
+//            System.out.println("----1");
+//            WebElement plusButton = driver.findElement(By.xpath("//*[@id=\"crtplus1229\"]"));
+//            System.out.println("----2");
+//            boolean isDisplayed = plusButton.isDisplayed();
+//            System.out.println("----");
+//            System.out.println(isDisplayed);
             wait.until(ExpectedConditions.visibilityOfElementLocated(add_to_cart_path));
-            driver.findElement(add_to_cart_path).click();
+            WebElement element = driver.findElement(add_to_cart_path);
+            element.click();
+//            WebElement plusMinusElement = driver.findElement(By.cssSelector("plus-minus number ng-scope"));
+//
+//            System.out.println(plusMinusElement);
+//            System.out.println("---hghg");
+//            if (!plusMinusElement.isDisplayed()) {
+//                System.out.println("Hoiiii");
+//                wait.until(ExpectedConditions.visibilityOfElementLocated(add_to_cart_path));
+//                WebElement element = driver.findElement(add_to_cart_path);
+//                element.click();
+//            } else {
+//                System.out.println("Hhhhhhhh");
+////                WebElement plusButton = driver.findElement(By.xpath("//span[@class='plus' and contains(@ng-click, 'plus')]"));
+//                String productId = "1229";
+//                WebElement plusButton = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"plus1229\"]")));
+//                plusButton.click();
+//
+//            }
+
         } catch (Exception e) {
+            System.out.println("Error : " + e.getMessage());
             throw new RuntimeException(e);
         }
     }
