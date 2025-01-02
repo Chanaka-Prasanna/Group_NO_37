@@ -133,5 +133,6 @@ jobs:
         with:
           branch: gh-pages
           folder: UI/target/allure-report
+          target-folder: ui
           clean: true
           token: ${{ secrets.GITHUB_TOKEN }}       
