@@ -42,16 +42,19 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class HomePage {
 
-    By vegetablePath = By.xpath("//*[@id=\"divDynamicSection\"]/div[3]/div[1]/div/div[2]/div[2]/div[1]/div/a");
-    By fruitsPath = By.xpath("//*[@id=\"divDynamicSection\"]/div[3]/div[1]/div/div[2]/div[2]/div[2]/div/a");
-    By faceBookPath = By.xpath("/html/body/div[7]/div[1]/div[3]/div/div[2]/ul/li[1]/a/i");
-    By instagramPath = By.xpath("/html/body/div[7]/div[1]/div[3]/div/div[2]/ul/li[3]/a/i");
+    By vegetable_path = By.xpath("//*[@id=\"divDynamicSection\"]/div[3]/div[1]/div/div[2]/div[2]/div[1]/div/a");
+    By fruits_path = By.xpath("//*[@id=\"divDynamicSection\"]/div[3]/div[1]/div/div[2]/div[2]/div[2]/div/a");
+    By faceBook_path = By.xpath("/html/body/div[7]/div[1]/div[3]/div/div[2]/ul/li[1]/a/i");
+    By instagram_path = By.xpath("/html/body/div[7]/div[1]/div[3]/div/div[2]/ul/li[3]/a/i");
 
-    By googlePlayLink = By.xpath("/html/body/div[7]/div[1]/div[3]/div/div[1]/a[1]");
-    By appStoreLink = By.xpath("/html/body/div[7]/div[1]/div[3]/div/div[1]/a[2]");
+    By google_play_link = By.xpath("/html/body/div[7]/div[1]/div[3]/div/div[1]/a[1]");
+    By app_store_link = By.xpath("/html/body/div[7]/div[1]/div[3]/div/div[1]/a[2]");
 
-    By giftingLink = By.xpath("//*[@id=\"footerCategory\"]/li[23]/a");
-    By stationeryLink = By.xpath("//*[@id=\"footerCategory\"]/li[28]/a");
+    By gifting_link = By.xpath("//*[@id=\"footerCategory\"]/li[23]/a");
+    By stationery_link = By.xpath("//*[@id=\"footerCategory\"]/li[28]/a");
+    private By baby_products_path = By.xpath("//*[@id=\"mainMenu\"]/li[2]/a");
+    private By beverages_path = By.xpath("//*[@id=\"mainMenu\"]/li[4]/a");
+    private By food_cupboard_path = By.xpath("//*[@id=\"mainMenu\"]/li[5]/a");
     WebDriver driver;
 
     public HomePage(WebDriver driver) {
@@ -60,17 +63,25 @@ public class HomePage {
 
     public CategoryPage selectCategory(String category) {
 
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
 
         WebElement categoryElement;
         if (category.equalsIgnoreCase("Vegetables")) {
-            categoryElement = wait.until(ExpectedConditions.elementToBeClickable(vegetablePath));
+            categoryElement = wait.until(ExpectedConditions.elementToBeClickable(vegetable_path));
         } else if (category.equalsIgnoreCase("Fruits")) {
-            categoryElement = wait.until(ExpectedConditions.elementToBeClickable(fruitsPath));
+            categoryElement = wait.until(ExpectedConditions.elementToBeClickable(fruits_path));
+        } else if (category.equalsIgnoreCase("Baby Products")) {
+            categoryElement = wait.until(ExpectedConditions.elementToBeClickable(baby_products_path));
+        } else if (category.equalsIgnoreCase("Beverages")) {
+            categoryElement = wait.until(ExpectedConditions.elementToBeClickable(beverages_path));
+        } else if (category.equalsIgnoreCase("Food Cupboard")) {
+            categoryElement = wait.until(ExpectedConditions.elementToBeClickable(food_cupboard_path));
         } else {
             throw new IllegalArgumentException("Unknown category: " + category);
         }
-        categoryElement.click();
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+        js.executeScript("arguments[0].click();", categoryElement);
+
         return new CategoryPage(driver);
     }
 
@@ -79,17 +90,15 @@ public class HomePage {
         WebElement categoryElement;
 
         if (category.equalsIgnoreCase("Gifting")) {
-            categoryElement = wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[@id=\"footerCategory\"]/li[23]/a")));
+            categoryElement = wait.until(ExpectedConditions.presenceOfElementLocated(gifting_link));
         } else if (category.equalsIgnoreCase("Stationery")) {
-            categoryElement = wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[@id=\"footerCategory\"]/li[28]/a")));
+            categoryElement = wait.until(ExpectedConditions.presenceOfElementLocated(stationery_link));
         } else {
             throw new IllegalArgumentException("Unknown category: " + category);
         }
 
-        // Scroll the element into view
         ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});", categoryElement);
 
-        // Use JavaScript to click the element
         ((JavascriptExecutor) driver).executeScript("arguments[0].click();", categoryElement);
 
         return new CategoryPage(driver);
@@ -99,8 +108,8 @@ public class HomePage {
 
     public void clickSocialMediaIcon(String socialMedia) {
         By path = switch (socialMedia.toLowerCase()) {
-            case "facebook" -> faceBookPath;
-            case "instagram" -> instagramPath;
+            case "facebook" -> faceBook_path;
+            case "instagram" -> instagram_path;
             default -> throw new IllegalArgumentException("Unsupported social media: " + socialMedia);
         };
 
@@ -130,8 +139,8 @@ public class HomePage {
 
     public void clickAppDownloadLink(String link) {
         By path = switch (link.toLowerCase()) {
-            case "google play" -> googlePlayLink;
-            case "app store" -> appStoreLink;
+            case "google play" -> google_play_link;
+            case "app store" -> app_store_link;
             default -> throw new IllegalArgumentException("Unsupported social media: " + link);
         };
 

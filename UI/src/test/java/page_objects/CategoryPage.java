@@ -54,6 +54,12 @@ public class CategoryPage {
                 productList = driver.findElement(By.xpath("//*[@id=\"h3head\"]/span[2]"));
             } else if (category.equalsIgnoreCase("Stationery")) {
                 productList = driver.findElement(By.xpath("//*[@id=\"h3head\"]/span[2]"));
+            } else if (category.equalsIgnoreCase("Baby Products")) {
+                productList = driver.findElement(By.xpath("//*[@id=\"h3head\"]/span[2]"));
+            } else if (category.equalsIgnoreCase("Beverages")) {
+                productList = driver.findElement(By.xpath("//*[@id=\"h3head\"]/span[2]"));
+            } else if (category.equalsIgnoreCase("Food Cupboard")) {
+                productList = driver.findElement(By.xpath("//*[@id=\"h3head\"]/span[2]"));
             } else {
                 throw new IllegalArgumentException("Unknown category: " + category);
             }
