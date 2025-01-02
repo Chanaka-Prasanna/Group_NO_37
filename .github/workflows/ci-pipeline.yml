@@ -33,13 +33,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-maven-
 
-      # Step 4: Verify Google Chrome installation
-      - name: Verify Google Chrome installation
-        run: |
-          which google-chrome || echo "Google Chrome is not installed"
-          google-chrome --version || echo "Unable to fetch Chrome version"
-
-      # Step 5: Install Google Chrome if missing
+      # Step 4: Install Google Chrome
       - name: Install Google Chrome
         run: |
           wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
@@ -47,72 +41,40 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y google-chrome-stable
 
-      # Step 6: Check Chrome version and set environment variable
-      - name: Check Chrome version
+      # Step 5: Install ChromeDriver
+      - name: Install ChromeDriver
         run: |
-          CHROME_VERSION=$(google-chrome --version | grep -oP '\d+\.\d+\.\d+\.\d+')
-          echo "chrome_version=${CHROME_VERSION}" >> $GITHUB_ENV
+          CHROME_VERSION=$(google-chrome --version | grep -oP '\d+\.\d+\.\d+' | head -n 1)
+          CHROMEDRIVER_VERSION=$(curl -s "https://chromedriver.storage.googleapis.com/LATEST_RELEASE_$CHROME_VERSION")
+          wget -N "https://chromedriver.storage.googleapis.com/${CHROMEDRIVER_VERSION}/chromedriver_linux64.zip" -P /tmp
+          unzip /tmp/chromedriver_linux64.zip -d /tmp
+          mkdir -p UI/src/test/resources/driver/
+          mv /tmp/chromedriver UI/src/test/resources/driver/chromedriver
+          chmod +x UI/src/test/resources/driver/chromedriver
+          echo "ChromeDriver placed at UI/src/test/resources/driver/chromedriver"
 
-      # Step 7: Upload chromedriver.exe artifact (already available in your project)
-      - name: Upload chromedriver.exe (Windows)
-        uses: actions/upload-artifact@v3
-        with:
-          name: chromedriver-exe
-          path: UI/src/test/resources/driver/chromedriver.exe
-
-      # Step 8: Install Wine to run .exe on Ubuntu
-      - name: Install Wine
-        run: |
-          sudo dpkg --add-architecture i386
-          sudo apt-get update
-          sudo apt-get install -y wine64 wine32
-
-      # Step 9: Download chromedriver.exe artifact
-      - name: Download chromedriver.exe artifact
-        uses: actions/download-artifact@v3
-        with:
-          name: chromedriver-exe
-
-      # Step 10: Move chromedriver.exe to the correct path
-      - name: Move chromedriver.exe to the correct path
-        run: |
-          mv chromedriver.exe UI/src/test/resources/driver/chromedriver.exe
-
-      # Step 11: Make chromedriver.exe executable with Wine
-      - name: Make chromedriver.exe executable with Wine
-        run: |
-          sudo wine UI/src/test/resources/driver/chromedriver.exe --version
-          sudo chmod +x UI/src/test/resources/driver/chromedriver.exe
-          echo "Using chromedriver located at: UI/src/test/resources/driver/chromedriver.exe"
-
-      # Step 12: Install Maven dependencies
+      # Step 6: Install Maven dependencies
       - name: Install Maven dependencies
         run: mvn install -DskipTests
         working-directory: UI
-        
-      # Step 13: Run tests and generate Allure results
-      - name: Run tests in headless mode and generate Allure results
+
+      # Step 7: Run tests in headless mode and generate Allure results
+      - name: Run tests and generate Allure results
         run: |
           mvn test -Dsurefire.suiteXmlFiles=testng.xml \
             -Dallure.results.directory=target/allure-results \
-            -Dwebdriver.chrome.driver=UI/src/test/resources/driver/chromedriver.exe \
+            -Dwebdriver.chrome.driver=UI/src/test/resources/driver/chromedriver \
             -Dchrome.options="--headless --no-sandbox --disable-dev-shm-usage"
         working-directory: UI
-  
 
-      # Step 13: Run tests and generate Allure results
-      - name: Run tests and generate Allure results
-        run: mvn test -Dsurefire.suiteXmlFiles=testng.xml -Dallure.results.directory=target/allure-results
-        working-directory: UI
-
-      # Step 14: Generate Allure HTML report
+      # Step 8: Generate Allure HTML report
       - name: Generate Allure Report
         run: |
           npm install -g allure-commandline --force
           allure generate target/allure-results -o target/allure-report --clean
         working-directory: UI
 
-      # Step 15: Upload Allure HTML report as an artifact
+      # Step 9: Upload Allure HTML report as an artifact
       - name: Upload Allure Report
         uses: actions/upload-artifact@v3
         with:
