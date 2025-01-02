@@ -18,6 +18,7 @@ jobs:
         uses: actions/checkout@v3
 
       # Step 2: Set up JDK
+      - name: Set up JDK
         uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
@@ -40,18 +41,27 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y google-chrome-stable
 
-      # Step 5: Download the latest matching ChromeDriver
-      - name: Download the latest ChromeDriver
+      # Step 5: Install ChromeDriver
+      - name: Install ChromeDriver
         run: |
-          # Fetch the latest ChromeDriver version from the stable channel
-          CHROMEDRIVER_VERSION=$(curl -s https://chromedriver.storage.googleapis.com/LATEST_RELEASE)
-          echo "Detected ChromeDriver version: $CHROMEDRIVER_VERSION"
+          # Fetch installed Chrome version
+          CHROME_VERSION=$(google-chrome --version | grep -oP '\d+\.\d+\.\d+' | head -n 1)
+          echo "Detected Chrome version: $CHROME_VERSION"
           
-          # Download and unzip the latest ChromeDriver version
-          wget "https://chromedriver.storage.googleapis.com/${CHROMEDRIVER_VERSION}/chromedriver_linux64.zip" -P /tmp
+          # Fetch corresponding ChromeDriver version
+          CHROMEDRIVER_VERSION=$(curl -s "https://chromedriver.storage.googleapis.com/LATEST_RELEASE_$CHROME_VERSION")
+          
+          # Ensure the version is valid and handle errors
+          if [[ -z "$CHROMEDRIVER_VERSION" ]]; then
+            echo "Error: ChromeDriver version for $CHROME_VERSION not found. Falling back to the latest stable version."
+            CHROMEDRIVER_VERSION=$(curl -s "https://chromedriver.storage.googleapis.com/LATEST_RELEASE")
+          fi
+          
+          # Download and unzip the appropriate ChromeDriver version
+          wget -N "https://chromedriver.storage.googleapis.com/${CHROMEDRIVER_VERSION}/chromedriver_linux64.zip" -P /tmp
           unzip /tmp/chromedriver_linux64.zip -d /tmp
-
-          # Move it to the correct location
+          
+          # Move to the correct path
           mkdir -p UI/src/test/resources/driver/
           mv /tmp/chromedriver UI/src/test/resources/driver/chromedriver
           chmod +x UI/src/test/resources/driver/chromedriver
