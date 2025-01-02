@@ -1,4 +1,4 @@
-name: Selenium Cucumber TestNG Pipeline
+name: Frontend Pipeline
 on:
   push:
     branches:
@@ -13,20 +13,17 @@ jobs:
     env:
       DISPLAY: :99
       CHROME_BIN: /usr/bin/google-chrome
-    
+
     steps:
-      # Step 1: Checkout code
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # Step 2: Set up JDK
       - name: Set up JDK
         uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
           java-version: '21'
 
-      # Step 3: Cache Maven dependencies
       - name: Cache Maven dependencies
         uses: actions/cache@v3
         with:
@@ -34,16 +31,14 @@ jobs:
           key: ${{ runner.os }}-maven-${{ hashFiles('**/UI/pom.xml') }}
           restore-keys: |
             ${{ runner.os }}-maven-
-            
-      # Step 4: Create .env file in UI directory
+
       - name: Create .env file
         working-directory: UI
         run: |
           echo "BASE_URL=https://cargillsonline.com/" > .env
           echo "LOGIN_TEXT=geshanpasindu4@gmail.com" >> .env
-          echo "PASSWORD=Gesh@1234" >> .env      
+          echo "PASSWORD=Gesh@1234" >> .env
 
-      # Step 5: Install Latest Google Chrome
       - name: Install Latest Google Chrome
         run: |
           wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
@@ -52,43 +47,35 @@ jobs:
           sudo apt-get install -y google-chrome-stable
           google-chrome --version
 
-      # Step 5: Install Specific ChromeDriver
       - name: Install ChromeDriver for Chrome 131.0.6778.204
         run: |
           CHROMEDRIVER_URL="https://storage.googleapis.com/chrome-for-testing-public/131.0.6778.204/linux64/chromedriver-linux64.zip"
-          echo "Downloading ChromeDriver from ${CHROMEDRIVER_URL}"
           wget -N "${CHROMEDRIVER_URL}" -P /tmp
           unzip /tmp/chromedriver-linux64.zip -d /tmp/chromedriver-linux64/
           mkdir -p UI/src/test/resources/driver/
           mv /tmp/chromedriver-linux64/chromedriver-linux64/chromedriver UI/src/test/resources/driver/chromedriver
           chmod +x UI/src/test/resources/driver/chromedriver
 
-      # Step 6: Install XVFB for GUI
       - name: Install XVFB
         run: |
           sudo apt-get install -y xvfb
           sudo Xvfb :99 -screen 0 1920x1080x24 > /dev/null 2>&1 &
-          sleep 3  # Give xvfb some time to start
+          sleep 3
 
-      # Step 7: Verify Chrome and ChromeDriver Versions
       - name: Verify Chrome and ChromeDriver Versions
         run: |
           google-chrome --version
           UI/src/test/resources/driver/chromedriver --version
 
-      # Step 8: Set up Chrome for testing
       - name: Set up Chrome for testing
         run: |
           sudo chown root:root /opt/google/chrome/chrome-sandbox
           sudo chmod 4755 /opt/google/chrome/chrome-sandbox
 
-      # Step 9: Install Maven dependencies
       - name: Install Maven dependencies
         run: mvn install -DskipTests
         working-directory: UI
 
-
-      # Step 10: Run tests in headless mode and generate Allure results
       - name: Run tests and generate Allure results
         run: |
           mvn test -Dsurefire.suiteXmlFiles=testng.xml \
@@ -98,26 +85,22 @@ jobs:
         working-directory: UI
         continue-on-error: true
 
-      # Step 11: Generate Allure HTML report
       - name: Generate Allure Report
         run: |
           npm install -g allure-commandline --force
-          allure generate allure-results --clean -o allure-report
-        working-directory:  UI/target
-        
-      # Debug Step: Verify Allure Report Folder
+          allure generate target/allure-results --clean -o target/allure-report
+        working-directory: UI
+
       - name: Debug Allure Report Folder
         run: ls -R UI/target/allure-report
-   
 
-      # Step 12: Upload Allure HTML report as an artifact
-      - name: Upload Allure Report
-        uses: actions/upload-artifact@v3
+      - name: Deploy to GitHub Pages
+        if: success()
+        uses: peaceiris/actions-gh-pages@v3
         with:
-          name: allure-report
-          path: UI/target/allure-report
-
-      # Step 13: Upload test logs on failure
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: UI/target/allure-report
+          
       - name: Upload test logs
         if: failure()
         uses: actions/upload-artifact@v3
@@ -125,4 +108,4 @@ jobs:
           name: test-logs
           path: |
             UI/target/surefire-reports/
-            UI/target/logs/
+            UI/target/logs/    
