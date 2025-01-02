@@ -32,34 +32,27 @@ jobs:
           key: ${{ runner.os }}-maven-${{ hashFiles('**/UI/pom.xml') }}
           restore-keys: |
             ${{ runner.os }}-maven-
-            
-      # Step 5: Install a Compatible Version of Google Chrome (Version 129)
-      - name: Install Compatible Google Chrome
+
+      # Step 5: Install Latest Google Chrome
+      - name: Install Latest Google Chrome
         run: |
           wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
           sudo sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list'
           sudo apt-get update
-          # Install a specific version of Chrome (e.g., 129.0.6778.132)
-          sudo apt-get install -y google-chrome-stable=129.0.6778.132-1
+          sudo apt-get install -y google-chrome-stable
           google-chrome --version
 
-      # Step 6: Install ChromeDriver Matching the Downgraded Chrome Version
-      - name: Install ChromeDriver
+            # Step 6: Install Specific ChromeDriver
+      - name: Install ChromeDriver for Chrome 131.0.6778.204
         run: |
-          # Fetch Chrome version
-          CHROME_VERSION=$(google-chrome --version | awk '{print $3}' | cut -d '.' -f 1)
-          echo "Using major Chrome version: $CHROME_VERSION"
-
-          # Fetch matching ChromeDriver version
-          CHROMEDRIVER_VERSION=$(curl -s "https://chromedriver.storage.googleapis.com/LATEST_RELEASE_${CHROME_VERSION}")
-          echo "Matching ChromeDriver version: $CHROMEDRIVER_VERSION"
-
-          # Download and install ChromeDriver
-          wget -N "https://chromedriver.storage.googleapis.com/${CHROMEDRIVER_VERSION}/chromedriver_linux64.zip" -P /tmp
-          unzip /tmp/chromedriver_linux64.zip -d /tmp
+          CHROMEDRIVER_URL="https://storage.googleapis.com/chrome-for-testing-public/131.0.6778.204/linux64/chromedriver-linux64.zip"
+          echo "Downloading ChromeDriver from ${CHROMEDRIVER_URL}"
+          wget -N "${CHROMEDRIVER_URL}" -P /tmp
+          unzip /tmp/chromedriver-linux64.zip -d /tmp/chromedriver-linux64/
           mkdir -p UI/src/test/resources/driver/
-          mv /tmp/chromedriver UI/src/test/resources/driver/chromedriver
+          mv /tmp/chromedriver-linux64/chromedriver-linux64/chromedriver UI/src/test/resources/driver/chromedriver
           chmod +x UI/src/test/resources/driver/chromedriver
+
 
 
       # Step 7: Install XVFB for GUI
