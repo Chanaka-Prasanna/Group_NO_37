@@ -33,7 +33,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-maven-
 
-      # Step 4: Install Google Chrome
+      # Step 4: Install Google Chrome (latest stable version)
       - name: Install Google Chrome
         run: |
           wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
@@ -41,26 +41,17 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y google-chrome-stable
 
-      # Step 5: Install ChromeDriver
-      - name: Install ChromeDriver
+      # Step 5: Install Latest ChromeDriver (latest stable version)
+      - name: Install Latest ChromeDriver
         run: |
-          # Fetch installed Chrome version
-          CHROME_VERSION=$(google-chrome --version | grep -oP '\d+\.\d+\.\d+' | head -n 1)
-          echo "Detected Chrome version: $CHROME_VERSION"
-          
-          # Fetch corresponding ChromeDriver version
-          CHROMEDRIVER_VERSION=$(curl -s "https://chromedriver.storage.googleapis.com/LATEST_RELEASE_$CHROME_VERSION")
-          
-          # Ensure the version is valid and handle errors
-          if [[ -z "$CHROMEDRIVER_VERSION" ]]; then
-            echo "Error: ChromeDriver version for $CHROME_VERSION not found. Falling back to the latest stable version."
-            CHROMEDRIVER_VERSION=$(curl -s "https://chromedriver.storage.googleapis.com/LATEST_RELEASE")
-          fi
-          
+          # Fetch the latest stable ChromeDriver version
+          CHROMEDRIVER_VERSION=$(curl -s "https://chromedriver.storage.googleapis.com/LATEST_RELEASE")
+          echo "Detected ChromeDriver version: $CHROMEDRIVER_VERSION"
+
           # Download and unzip the appropriate ChromeDriver version
           wget -N "https://chromedriver.storage.googleapis.com/${CHROMEDRIVER_VERSION}/chromedriver_linux64.zip" -P /tmp
           unzip /tmp/chromedriver_linux64.zip -d /tmp
-          
+
           # Move to the correct path
           mkdir -p UI/src/test/resources/driver/
           mv /tmp/chromedriver UI/src/test/resources/driver/chromedriver
