@@ -163,7 +163,7 @@ jobs:
     needs: [api-tests, ui-tests]
     steps:
     
-      - name: Download API Allure Results
+    - name: Download API Allure Results
       uses: actions/download-artifact@v3
       with:
         name: api-allure-results
