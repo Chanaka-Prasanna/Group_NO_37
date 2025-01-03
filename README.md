@@ -50,4 +50,14 @@ Tools/Frameworks:
 - TestNG
 - Selenium (WebDriver tool)
 
+### API Testing
+
+Tools/Frameworks:
+
+- Cucumber BDD Framework
+- TestNG
+- Rest Assured
+
 ### Testing Site: [cargils online](https://cargillsonline.com/)
+
+### Allure Report : [click here](https://chanaka-prasanna.github.io/Group_NO_37/report)
