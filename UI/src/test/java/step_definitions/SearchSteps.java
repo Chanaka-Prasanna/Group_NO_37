@@ -10,6 +10,9 @@ import org.testng.Assert;
 import page_objects.SearchBar;
 import utils.DriverFactory;
 import utils.Config;
+
+import java.io.UnsupportedEncodingException;
+
 public class SearchSteps {
     WebDriver driver;
     SearchBar searchBar;
@@ -34,7 +37,7 @@ public class SearchSteps {
 
     @Step("Verify search results page for the term: {searchTerm}")
     @Then("the search results page for {string} should be displayed")
-    public void the_search_results_page_for_should_be_displayed(String searchTerm) {
+    public void the_search_results_page_for_should_be_displayed(String searchTerm) throws UnsupportedEncodingException {
         boolean isCorrectURL = searchBar.isSearchResultsPageURLCorrect(searchTerm);
         Allure.step("Expected URL:"+Config.env_values("BASE_URL")+"/product/" + searchTerm.toLowerCase() + "?PS=" + searchTerm.toLowerCase());
         Assert.assertTrue(isCorrectURL, "The URL of the search results page is incorrect for term: " + searchTerm);
