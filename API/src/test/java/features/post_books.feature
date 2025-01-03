@@ -1,4 +1,4 @@
-Feature: Book Management API Test
+Feature: Book Management API Tests
 Scenarios To validate POST request using Basic Authentication.
   Scenario: Register a new book with a new title and an author
     Given I logged in to the system with user credentials
@@ -54,4 +54,4 @@ Scenarios To validate POST request using Basic Authentication.
         "author": "F. Scott Fitzgerald"
       }
       """
-    Then I should receive a 400 status code
+    Then I should receive a 409 status code
