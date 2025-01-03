@@ -5,7 +5,7 @@ on:
       - main
   pull_request:
     branches:
-      - main
+      
 
 jobs:
   build-and-test:
@@ -65,15 +65,15 @@ jobs:
             -u admin:password \
             -d '{"id": 5, "title": "The Catcher in the Rye", "author": "Jerome David Salinger"}'
    
-      # Step 4: Create .env file in UI directory
+      # Step 6: Create .env file in UI directory
       - name: Create .env file
         working-directory: UI
         run: |
-          echo "BASE_URL=${{secrets.BASE_URL}}" > .env
-          echo "LOGIN_TEXT=${{secrets.LOGIN_TEXT}}" >> .env
-          echo "PASSWORD=${{secrets.PASSWORD}}" >> .env      
+          echo "BASE_URL=${{ secrets.BASE_URL }}" > .env
+          echo "LOGIN_TEXT=${{ secrets.LOGIN_TEXT }}" >> .env
+          echo "PASSWORD=${{ secrets.PASSWORD }}" >> .env      
 
-      # Step 5: Install Latest Google Chrome
+      # Step 7: Install Latest Google Chrome
       - name: Install Latest Google Chrome
         run: |
           wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
@@ -82,7 +82,7 @@ jobs:
           sudo apt-get install -y google-chrome-stable
           google-chrome --version
 
-      # Step 5: Install Specific ChromeDriver
+      # Step 8: Install Specific ChromeDriver
       - name: Install ChromeDriver for Chrome 131.0.6778.204
         run: |
           CHROMEDRIVER_URL="https://storage.googleapis.com/chrome-for-testing-public/131.0.6778.204/linux64/chromedriver-linux64.zip"
@@ -93,31 +93,31 @@ jobs:
           mv /tmp/chromedriver-linux64/chromedriver-linux64/chromedriver UI/src/test/resources/driver/chromedriver
           chmod +x UI/src/test/resources/driver/chromedriver
 
-      # Step 6: Install XVFB for GUI
+      # Step 9: Install XVFB for GUI
       - name: Install XVFB
         run: |
           sudo apt-get install -y xvfb
           sudo Xvfb :99 -screen 0 1920x1080x24 > /dev/null 2>&1 &
           sleep 3  # Give xvfb some time to start
 
-      # Step 7: Verify Chrome and ChromeDriver Versions
+      # Step 10: Verify Chrome and ChromeDriver Versions
       - name: Verify Chrome and ChromeDriver Versions
         run: |
           google-chrome --version
           UI/src/test/resources/driver/chromedriver --version
 
-      # Step 8: Set up Chrome for testing
+      # Step 11: Set up Chrome for testing
       - name: Set up Chrome for testing
         run: |
           sudo chown root:root /opt/google/chrome/chrome-sandbox
           sudo chmod 4755 /opt/google/chrome/chrome-sandbox
 
-      # Step 9: Install Maven dependencies
+      # Step 12: Install Maven dependencies
       - name: Install Maven dependencies
         run: mvn install -DskipTests
         working-directory: UI
         
-      # Step 6: Run API tests and generate Allure results
+      # Step 13: Run API tests and generate Allure results
       - name: Run API tests and generate Allure results
         run: |
           mvn test -Dtest=runner.TestNGCucumberRunner \
@@ -125,7 +125,7 @@ jobs:
         working-directory: API
         continue-on-error: true  
 
-      # Step 10: Run tests in headless mode and generate Allure results
+      # Step 14: Run tests in headless mode and generate Allure results
       - name: Run tests and generate Allure results
         run: |
           mvn test -Dsurefire.suiteXmlFiles=testng.xml \
@@ -135,14 +135,14 @@ jobs:
         working-directory: UI
         continue-on-error: true
         
-      # Step 7: Combine Allure Results from API and UI
+      # Step 15: Combine Allure Results from API and UI
       - name: Combine Allure Results
         run: |
           mkdir -p combined-allure-results
           cp -r API/target/allure-results/* combined-allure-results/
           cp -r UI/target/allure-results/* combined-allure-results/  
 
-      # Step 8: Generate Combined Allure Report
+      # Step 16: Generate Combined Allure Report
       - name: Generate Combined Allure Report
         run: |
           npm install -g allure-commandline --force
