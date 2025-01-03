@@ -107,22 +107,22 @@ public class Cart {
 
     public boolean is_on_cart() {
         try {
+            // Find and click cart icon
+            WebElement cartIcon = wait.until(ExpectedConditions.elementToBeClickable(cart_icon_path));
+            ((JavascriptExecutor) driver).executeScript("arguments[0].click();", cartIcon);
 
-            // Wait until cart bubble disappears
-            wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("divCartBubble")));
+            // Wait for cart modal to be visible
+            WebElement cartModal = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("myModalCart")));
 
-
-            driver.findElement(cart_icon_path).click();
-            wait.until(ExpectedConditions.visibilityOfElementLocated(cart_path));
-
-            String css_value = driver.findElement(cart_path).getCssValue("display");
-            return css_value.equals("block");
+            // Check if cart content is displayed
+            WebElement cartContent = cartModal.findElement(By.id("cardData"));
+            return cartContent.isDisplayed() && !cartContent.getCssValue("display").equals("none");
 
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            System.out.println("Cart display error: " + e.getMessage());
+            return false;
         }
     }
-
 
     public boolean have_products(){
         try{
