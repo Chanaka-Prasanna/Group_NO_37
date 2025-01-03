@@ -5,36 +5,40 @@ on:
       - main
 
 jobs:
-  # Job 1: API Tests
-  api-tests:
+  build-and-test:
     runs-on: ubuntu-latest
+    env:
+      DISPLAY: :99
+      CHROME_BIN: /usr/bin/google-chrome
+    
     steps:
+      # Step 1: Checkout code
       - name: Checkout code
         uses: actions/checkout@v3
-      
+
+      # Step 2: Set up JDK
       - name: Set up JDK
         uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
           java-version: '21'
 
+      # Step 3: Cache Maven dependencies
       - name: Cache Maven dependencies
         uses: actions/cache@v3
         with:
           path: ~/.m2
-          key: ${{ runner.os }}-maven-${{ hashFiles('**/API/pom.xml') }}
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/UI/pom.xml') }}
           restore-keys: |
             ${{ runner.os }}-maven-
-
-      - name: Start API Server
+      
+      # Step 4: Start API JAR Server
+      - name: Start API JAR Server
         run: |
           nohup java -jar API/env/demo-0.0.1-SNAPSHOT.jar &
-          sleep 5
-      
-      - name: Install Maven dependencies
-        run: mvn install -DskipTests
-        working-directory: API
-
+          sleep 5 # Give time for the server to start 
+          
+      # Step 5: Make POST requests to initialize the API
       - name: Initialize API with POST requests
         run: |
           curl -X POST http://localhost:7081/api/books \
@@ -57,53 +61,16 @@ jobs:
             -H "Content-Type: application/json" \
             -u admin:password \
             -d '{"id": 5, "title": "The Catcher in the Rye", "author": "Jerome David Salinger"}'
-
-      - name: Run API tests
-        run: |
-          mvn test -Dtest=runner.TestNGCucumberRunner \
-            -Dallure.results.directory=target/allure-results
-        working-directory: API
-        continue-on-error: true
-
-      - name: Upload API Allure Results
-        uses: actions/upload-artifact@v3
-        with:
-          name: api-allure-results
-          path: API/target/allure-results
-
-  # Job 2: UI Tests
-  ui-tests:
-    runs-on: ubuntu-latest
-    env:
-      DISPLAY: :99
-      CHROME_BIN: /usr/bin/google-chrome
-
-    needs: api-tests
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Set up JDK
-        uses: actions/setup-java@v3
-        with:
-          distribution: 'temurin'
-          java-version: '21'
-
-      - name: Cache Maven dependencies
-        uses: actions/cache@v3
-        with:
-          path: ~/.m2
-          key: ${{ runner.os }}-maven-${{ hashFiles('**/UI/pom.xml') }}
-          restore-keys: |
-            ${{ runner.os }}-maven-
-            
+   
+      # Step 6: Create .env file in UI directory
       - name: Create .env file
         working-directory: UI
         run: |
           echo "BASE_URL=${{ secrets.BASE_URL }}" > .env
           echo "LOGIN_TEXT=${{ secrets.LOGIN_TEXT }}" >> .env
-          echo "PASSWORD=${{ secrets.PASSWORD }}" >> .env
+          echo "PASSWORD=${{ secrets.PASSWORD }}" >> .env      
 
+      # Step 7: Install Latest Google Chrome
       - name: Install Latest Google Chrome
         run: |
           wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
@@ -112,6 +79,7 @@ jobs:
           sudo apt-get install -y google-chrome-stable
           google-chrome --version
 
+      # Step 8: Install Specific ChromeDriver
       - name: Install ChromeDriver for Chrome 131.0.6778.204
         run: |
           CHROMEDRIVER_URL="https://storage.googleapis.com/chrome-for-testing-public/131.0.6778.204/linux64/chromedriver-linux64.zip"
@@ -121,28 +89,41 @@ jobs:
           mkdir -p UI/src/test/resources/driver/
           mv /tmp/chromedriver-linux64/chromedriver-linux64/chromedriver UI/src/test/resources/driver/chromedriver
           chmod +x UI/src/test/resources/driver/chromedriver
-          
+
+      # Step 9: Install XVFB for GUI
       - name: Install XVFB
         run: |
           sudo apt-get install -y xvfb
           sudo Xvfb :99 -screen 0 1920x1080x24 > /dev/null 2>&1 &
           sleep 3  # Give xvfb some time to start
 
+      # Step 10: Verify Chrome and ChromeDriver Versions
       - name: Verify Chrome and ChromeDriver Versions
         run: |
           google-chrome --version
           UI/src/test/resources/driver/chromedriver --version
 
+      # Step 11: Set up Chrome for testing
       - name: Set up Chrome for testing
         run: |
           sudo chown root:root /opt/google/chrome/chrome-sandbox
           sudo chmod 4755 /opt/google/chrome/chrome-sandbox
-    
+
+      # Step 12: Install Maven dependencies
       - name: Install Maven dependencies
         run: mvn install -DskipTests
         working-directory: UI
+        
+      # Step 13: Run API tests and generate Allure results
+      - name: Run API tests and generate Allure results
+        run: |
+          mvn test -Dtest=runner.TestNGCucumberRunner \
+            -Dallure.results.directory=target/allure-results
+        working-directory: API
+        continue-on-error: true  
 
-      - name: Run UI tests
+      # Step 14: Run tests in headless mode and generate Allure results
+      - name: Run tests and generate Allure results
         run: |
           mvn test -Dsurefire.suiteXmlFiles=testng.xml \
             -Dallure.results.directory=target/allure-results \
@@ -150,47 +131,22 @@ jobs:
             -Dchrome.options="--headless=new --disable-gpu --no-sandbox --disable-dev-shm-usage --window-size=1920,1080 --remote-allow-origins=* --disable-extensions --disable-software-rasterizer"
         working-directory: UI
         continue-on-error: true
+        
+      # Step 15: Combine Allure Results from API and UI
+      - name: Combine Allure Results
+        run: |
+          mkdir -p combined-allure-results
+          cp -r API/target/allure-results/* combined-allure-results/
+          cp -r UI/target/allure-results/* combined-allure-results/  
 
-      - name: Upload UI Allure Results
-        uses: actions/upload-artifact@v3
-        with:
-          name: ui-allure-results
-          path: UI/target/allure-results
-
-  # Job 3: Combine Results and Deploy
-  combine-and-deploy:
-    runs-on: ubuntu-latest
-    needs: [api-tests, ui-tests]
-    steps:
-    
-    - name: Download API Allure Results
-      uses: actions/download-artifact@v3
-      with:
-        name: api-allure-results
-        path: api-results
-
-    - name: Download UI Allure Results
-      uses: actions/download-artifact@v3
-      with:
-        name: ui-allure-results
-        path: ui-results
-
-    - name: Merge Allure Results
-      run: |
-        mkdir -p combined-allure-results
-        cp -r api-results/* combined-allure-results/
-        cp -r ui-results/* combined-allure-results/
-
-      - name: Generate Allure Report
+      # Step 16: Generate Combined Allure Report
+      - name: Generate Combined Allure Report
         run: |
           npm install -g allure-commandline --force
           allure generate combined-allure-results --clean -o combined-allure-report
-          
-      - name: Verify Deployment Folder
-        run: ls -la combined-allure-report
-    
 
-      - name: Deploy Allure Report
+      # Step 9: Deploy Combined Allure Report to GitHub Pages
+      - name: Deploy Combined Allure Report to GitHub Pages
         if: success() && github.ref == 'refs/heads/main'
         uses: JamesIves/github-pages-deploy-action@v4
         with:
@@ -198,4 +154,4 @@ jobs:
           folder: combined-allure-report
           target-folder: report
           clean: true
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}       
