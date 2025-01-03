@@ -8,16 +8,33 @@
 4. Download Maven dependencies and load them.
 5. Install Scoop if your OS is Windows, Brew if your OS is macOS, and use `sudo` if your OS is Linux.
 6. Then install **Allure** - A reporting tool. Refer to the installation guide [here](https://allurereport.org/docs/install/).
-7. Make sure to add this in testing.xml
+7. Make sure to add this in `UI/testing.xml`  (UI only)
 
 ```bash
 <listeners>
     <listener class-name="io.qameta.allure.testng.AllureTestNg"/>
 </listeners>
 ```
+8. Make sure to add this in `API/pom.xml` (API only)
+```bash
+   <build>
+    <plugins>
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <version>3.0.0-M8</version>
+            <configuration>
+                <systemPropertyVariables>
+                    <allure.results.directory>target/allure-results</allure.results.directory>
+                </systemPropertyVariables>
+            </configuration>
+        </plugin>
+    </plugins>
+</build>
+```
 
-8. Run test cases using runner class
-9. Generate Allure report using this command
+9. Run test cases using runner class
+10. Generate Allure report using this command
 
 ```bash
 allure serve target/allure-results
