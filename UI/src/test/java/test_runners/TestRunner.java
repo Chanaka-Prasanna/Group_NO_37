@@ -7,7 +7,7 @@ import org.testng.annotations.DataProvider;
 //@RunWith(Cucumber.class)
 
 @CucumberOptions(
-        features = "src/test/resources/features/filter_menu.feature",
+        features = "src/test/resources/features/clear_cart.feature",
         glue = {"step_definitions"},
         monochrome = true,
         plugin = {"io.qameta.allure.cucumber7jvm.AllureCucumber7Jvm"}
