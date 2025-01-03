@@ -82,7 +82,10 @@ public class ProductCardSteps {
     @When("the user clicks the Add button on a product card")
     @Description("Simulates clicking the Add button on a product card.")
     public void the_user_clicks_the_add_button_on_a_product_card() {
-        productCard.clickAddButton();
+        if (productCard.isItemAlreadyAdded()) {
+            productCard.removeItemFromCart();
+        }
+        productCard.clickAddItem();
         addAllureAttachment("Clicked Add Button", "Add button clicked on a product card.");
     }
 
@@ -99,7 +102,7 @@ public class ProductCardSteps {
     @Description("checks whether quantity selector is displayed.")
     public void the_quantity_selector_is_displayed() {
         try {
-            productCard.clickAddButton();
+            productCard.clickAddItem();
             Assert.assertTrue(productCard.isQuantitySelectorDisplayed(), "Quantity selector is not displayed");
             addAllureAttachment("Quantity Selector Verification", "Quantity selector is displayed.");
         } catch (Exception e) {

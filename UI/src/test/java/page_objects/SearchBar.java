@@ -4,6 +4,8 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import utils.Config;
 
+import java.io.UnsupportedEncodingException;
+
 public class SearchBar {
     WebDriver driver;
 
@@ -27,8 +29,9 @@ public class SearchBar {
     }
 
     // Method to validate the URL of the search results page
-    public boolean isSearchResultsPageURLCorrect(String searchTerm) {
-        String expectedURL = Config.env_values("BASE_URL") +"product/"+ searchTerm + "?PS=" + searchTerm;
+    public boolean isSearchResultsPageURLCorrect(String searchTerm) throws UnsupportedEncodingException {
+        String encodedSearchTerm = searchTerm.replace(" ", "%20");
+        String expectedURL = Config.env_values("BASE_URL") + "product/" + encodedSearchTerm + "?PS=" + encodedSearchTerm;
         String currentURL = driver.getCurrentUrl();
         System.out.println("Current URL: " + currentURL);
         System.out.println("Expected URL: " + expectedURL);
