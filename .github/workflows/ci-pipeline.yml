@@ -96,6 +96,13 @@ jobs:
           key: ${{ runner.os }}-maven-${{ hashFiles('**/UI/pom.xml') }}
           restore-keys: |
             ${{ runner.os }}-maven-
+            
+      - name: Create .env file
+        working-directory: UI
+        run: |
+          echo "BASE_URL=${{ secrets.BASE_URL }}" > .env
+          echo "LOGIN_TEXT=${{ secrets.LOGIN_TEXT }}" >> .env
+          echo "PASSWORD=${{ secrets.PASSWORD }}" >> .env
 
       - name: Install Latest Google Chrome
         run: |
