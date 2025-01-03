@@ -69,9 +69,9 @@ jobs:
       - name: Create .env file
         working-directory: UI
         run: |
-          echo "BASE_URL=https://cargillsonline.com/" > .env
-          echo "LOGIN_TEXT=geshanpasindu4@gmail.com" >> .env
-          echo "PASSWORD=Gesh@1234" >> .env      
+          echo "BASE_URL=${{secrets.BASE_URL}}" > .env
+          echo "LOGIN_TEXT=${{secrets.LOGIN_TEXT}}" >> .env
+          echo "PASSWORD=${{secrets.PASSWORD}}" >> .env      
 
       # Step 5: Install Latest Google Chrome
       - name: Install Latest Google Chrome
