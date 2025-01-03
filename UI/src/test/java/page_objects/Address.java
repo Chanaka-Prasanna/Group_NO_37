@@ -85,7 +85,8 @@ public class Address {
             select.selectByIndex(1);
 
             List<WebElement> elements = driver.findElements(type_path);
-            elements.getFirst().click();
+            //elements.getFirst().click();
+            elements.get(0).click();
 
             List<WebElement> addressTypes_as_p_tags = driver.findElements(By.xpath("/html/body/div[3]/div[2]/div/div/div/div/div[6]/div[2]/div"));
 

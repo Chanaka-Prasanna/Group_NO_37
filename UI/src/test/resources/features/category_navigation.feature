@@ -14,7 +14,7 @@ Feature: Category Navigation
   I want to navigate through categories
   So that I can view products under those categories.
 
-  Scenario Outline: Navigate to a category and verify products are displayed
+  Scenario Outline: Navigate to a category and verify correctly display the category
     Given I am on the Cargills Online homepage
     When I click on the "<category>" category
     Then I should see a list of products under the "<category>"
