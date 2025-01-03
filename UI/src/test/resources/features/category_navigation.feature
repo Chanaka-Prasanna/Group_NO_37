@@ -16,8 +16,8 @@ Feature: Category Navigation
 
   Scenario Outline: Navigate to a category and verify correctly display the category
     Given I am on the Cargills Online homepage
-    When I click on the "<category>" category
-    Then I should see a list of products under the "<category>"
+    When  I click on the "<category>" category
+    Then  I should see a list of products under the "<category>"
 
     Examples:
       | category   |

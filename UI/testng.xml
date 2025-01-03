@@ -6,7 +6,7 @@
         <listener class-name="io.qameta.allure.testng.AllureTestNg"/>
     </listeners>
 
-    <test name="Login Tests">
+    <test name="ALl tests">
         <classes>
             <class name="test_runners.TestRunner"/>
         </classes>
