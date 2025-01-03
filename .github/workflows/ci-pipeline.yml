@@ -74,6 +74,10 @@ jobs:
   # Job 2: UI Tests
   ui-tests:
     runs-on: ubuntu-latest
+    env:
+      DISPLAY: :99
+      CHROME_BIN: /usr/bin/google-chrome
+
     needs: api-tests
     steps:
       - name: Checkout code
@@ -93,22 +97,40 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-maven-
 
-
-      - name: Install Chrome and ChromeDriver
+      - name: Install Latest Google Chrome
         run: |
+          wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
+          sudo sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list'
           sudo apt-get update
-          sudo apt-get install -y google-chrome-stable xvfb
-          wget -N "https://storage.googleapis.com/chrome-for-testing-public/131.0.6778.204/linux64/chromedriver-linux64.zip" -P /tmp
+          sudo apt-get install -y google-chrome-stable
+          google-chrome --version
+
+      - name: Install ChromeDriver for Chrome 131.0.6778.204
+        run: |
+          CHROMEDRIVER_URL="https://storage.googleapis.com/chrome-for-testing-public/131.0.6778.204/linux64/chromedriver-linux64.zip"
+          echo "Downloading ChromeDriver from ${CHROMEDRIVER_URL}"
+          wget -N "${CHROMEDRIVER_URL}" -P /tmp
           unzip /tmp/chromedriver-linux64.zip -d /tmp/chromedriver-linux64/
+          mkdir -p UI/src/test/resources/driver/
           mv /tmp/chromedriver-linux64/chromedriver-linux64/chromedriver UI/src/test/resources/driver/chromedriver
           chmod +x UI/src/test/resources/driver/chromedriver
-          sudo Xvfb :99 -screen 0 1920x1080x24 > /dev/null 2>&1 &
           
+      - name: Install XVFB
+        run: |
+          sudo apt-get install -y xvfb
+          sudo Xvfb :99 -screen 0 1920x1080x24 > /dev/null 2>&1 &
+          sleep 3  # Give xvfb some time to start
+
+      - name: Verify Chrome and ChromeDriver Versions
+        run: |
+          google-chrome --version
+          UI/src/test/resources/driver/chromedriver --version
+
       - name: Set up Chrome for testing
         run: |
           sudo chown root:root /opt/google/chrome/chrome-sandbox
           sudo chmod 4755 /opt/google/chrome/chrome-sandbox
-          
+    
       - name: Install Maven dependencies
         run: mvn install -DskipTests
         working-directory: UI
@@ -159,6 +181,7 @@ jobs:
     
 
       - name: Deploy Allure Report
+        if: success() && github.ref == 'refs/heads/main'
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           branch: gh-pages
