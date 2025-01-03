@@ -1,1 +1,0 @@
-Add button clicked on a product card.
