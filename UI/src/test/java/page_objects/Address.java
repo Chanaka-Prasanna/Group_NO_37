@@ -19,16 +19,10 @@ public class Address {
     By street_path           =    By.xpath("//*[@id=\"txtStreetName\"]");
     By land_mark_path        =    By.xpath("//*[@id=\"txtLandmark\"]");
     By dropdown_path         =    By.xpath("//*[@id=\"ddlLocality\"]");
-    By city_path             =    By.xpath("//*[@id=\"txtCity\"]");
     By type_path             =    By.xpath("/html/body/div[3]/div[2]/div/div/div/div/div[6]/div[2]/div");
-    By check_box_path        =    By.xpath("//*[@id='cbIsDefault']");
-    By add_address_btn_below =    By.xpath("//*[@id=\"btnAddAddress\"]");
     By parent_div_of_addresses =  By.xpath("//*[@id=\"divOrderShow\"]");
-    By name_path             =    By.xpath("//*[@id=\"txtName\"]");
     By address_class_name = By.className("main-address");
 
-
-    By delete_button = By.xpath("//button[contains(text(),'Delete')]");
     By confirm_button = By.xpath("//*[@id=\"btnOk\"]");
     By confirm_txt = By.xpath("//*[@id=\"txtAlertText1\"]");
 
@@ -38,18 +32,13 @@ public class Address {
     public Address(WebDriver driver){
        this.driver = driver;
        wait = new WebDriverWait(this.driver, Duration.ofSeconds(15));
-
     }
 
 
     public String get_manage_address_page_title(){
         try{
             wait.until(ExpectedConditions.visibilityOfElementLocated(page_title_path));
-
-            // Retrieve the title text
-            String s = driver.findElement(page_title_path).getText().trim();
-           ;  // Print the title for debugging
-            return s;
+            return driver.findElement(page_title_path).getText().trim();
 
 
         } catch (Exception e) {
