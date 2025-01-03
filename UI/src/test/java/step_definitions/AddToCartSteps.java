@@ -91,7 +91,7 @@ public class AddToCartSteps {
     public void i_see_products(){
         try {
             if (cart.products_available()){
-                Allure.step("User cans see products");
+                Allure.step("User can see products");
             }else {
 
                 Allure.addAttachment("Empty products", new ByteArrayInputStream(((org.openqa.selenium.TakesScreenshot) driver).getScreenshotAs(org.openqa.selenium.OutputType.BYTES)));
