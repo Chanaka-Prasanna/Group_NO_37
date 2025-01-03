@@ -1,0 +1,191 @@
+name: Allure Report Pipeline
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  # Job 1: API Tests
+  api-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+
+      - name: Cache Maven dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/API/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+
+      - name: Start API Server
+        run: |
+          nohup java -jar API/env/demo-0.0.1-SNAPSHOT.jar &
+          sleep 5
+      
+      - name: Install Maven dependencies
+        run: mvn install -DskipTests
+        working-directory: API
+
+      - name: Initialize API with POST requests
+        run: |
+          curl -X POST http://localhost:7081/api/books \
+            -H "Content-Type: application/json" \
+            -u admin:password \
+            -d '{"id": 1, "title": "Harry Potter", "author": "J. K. Rowling"}'
+          curl -X POST http://localhost:7081/api/books \
+            -H "Content-Type: application/json" \
+            -u admin:password \
+            -d '{"id": 2, "title": "Sherlock Holmes jr", "author": "Arthur Conan Doyle"}'
+          curl -X POST http://localhost:7081/api/books \
+            -H "Content-Type: application/json" \
+            -u admin:password \
+            -d '{"id": 3, "title": "Percy Jackson", "author": "Richard Russell Riordan"}'
+          curl -X POST http://localhost:7081/api/books \
+            -H "Content-Type: application/json" \
+            -u admin:password \
+            -d '{"id": 4, "title": "To Kill a Mockingbird", "author": "Harper Lee"}'
+          curl -X POST http://localhost:7081/api/books \
+            -H "Content-Type: application/json" \
+            -u admin:password \
+            -d '{"id": 5, "title": "The Catcher in the Rye", "author": "Jerome David Salinger"}'
+
+      - name: Run API tests
+        run: |
+          mvn test -Dtest=runner.TestNGCucumberRunner \
+            -Dallure.results.directory=target/allure-results
+        working-directory: API
+        continue-on-error: true
+
+      - name: Upload API Allure Results
+        uses: actions/upload-artifact@v3
+        with:
+          name: api-allure-results
+          path: API/target/allure-results
+
+  # Job 2: UI Tests
+  ui-tests:
+    runs-on: ubuntu-latest
+    env:
+      DISPLAY: :99
+      CHROME_BIN: /usr/bin/google-chrome
+
+    needs: api-tests
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+
+      - name: Cache Maven dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/UI/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+
+      - name: Install Latest Google Chrome
+        run: |
+          wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
+          sudo sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list'
+          sudo apt-get update
+          sudo apt-get install -y google-chrome-stable
+          google-chrome --version
+
+      - name: Install ChromeDriver for Chrome 131.0.6778.204
+        run: |
+          CHROMEDRIVER_URL="https://storage.googleapis.com/chrome-for-testing-public/131.0.6778.204/linux64/chromedriver-linux64.zip"
+          echo "Downloading ChromeDriver from ${CHROMEDRIVER_URL}"
+          wget -N "${CHROMEDRIVER_URL}" -P /tmp
+          unzip /tmp/chromedriver-linux64.zip -d /tmp/chromedriver-linux64/
+          mkdir -p UI/src/test/resources/driver/
+          mv /tmp/chromedriver-linux64/chromedriver-linux64/chromedriver UI/src/test/resources/driver/chromedriver
+          chmod +x UI/src/test/resources/driver/chromedriver
+          
+      - name: Install XVFB
+        run: |
+          sudo apt-get install -y xvfb
+          sudo Xvfb :99 -screen 0 1920x1080x24 > /dev/null 2>&1 &
+          sleep 3  # Give xvfb some time to start
+
+      - name: Verify Chrome and ChromeDriver Versions
+        run: |
+          google-chrome --version
+          UI/src/test/resources/driver/chromedriver --version
+
+      - name: Set up Chrome for testing
+        run: |
+          sudo chown root:root /opt/google/chrome/chrome-sandbox
+          sudo chmod 4755 /opt/google/chrome/chrome-sandbox
+    
+      - name: Install Maven dependencies
+        run: mvn install -DskipTests
+        working-directory: UI
+
+      - name: Run UI tests
+        run: |
+          mvn test -Dsurefire.suiteXmlFiles=testng.xml \
+            -Dallure.results.directory=target/allure-results \
+            -Dwebdriver.chrome.driver=UI/src/test/resources/driver/chromedriver \
+            -Dchrome.options="--headless=new --disable-gpu --no-sandbox --disable-dev-shm-usage --window-size=1920,1080 --remote-allow-origins=* --disable-extensions --disable-software-rasterizer"
+        working-directory: UI
+        continue-on-error: true
+
+      - name: Upload UI Allure Results
+        uses: actions/upload-artifact@v3
+        with:
+          name: ui-allure-results
+          path: UI/target/allure-results
+
+  # Job 3: Combine Results and Deploy
+  combine-and-deploy:
+    runs-on: ubuntu-latest
+    needs: [api-tests, ui-tests]
+    steps:
+    
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Download API Allure Results
+        uses: actions/download-artifact@v3
+        with:
+          name: api-allure-results
+          path: combined-allure-results
+
+      - name: Download UI Allure Results
+        uses: actions/download-artifact@v3
+        with:
+          name: ui-allure-results
+          path: combined-allure-results
+
+      - name: Generate Allure Report
+        run: |
+          npm install -g allure-commandline --force
+          allure generate combined-allure-results --clean -o combined-allure-report
+          
+      - name: Verify Deployment Folder
+        run: ls -la combined-allure-report
+    
+
+      - name: Deploy Allure Report
+        if: success() && github.ref == 'refs/heads/main'
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          branch: gh-pages
+          folder: combined-allure-report
+          target-folder: report
+          clean: true
+          token: ${{ secrets.GITHUB_TOKEN }}
