@@ -1,5 +1,6 @@
 Feature: Adding an address
 
+
   Scenario: Successfully add a new address
     Given I logged in
     And   I navigate to the manage address page

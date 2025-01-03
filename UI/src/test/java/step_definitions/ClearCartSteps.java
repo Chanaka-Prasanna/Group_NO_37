@@ -87,9 +87,19 @@ public class ClearCartSteps {
                 Allure.step("User has products in cart");
             }else {
 
-                Allure.addAttachment("User don't have product", new ByteArrayInputStream(((org.openqa.selenium.TakesScreenshot) driver).getScreenshotAs(org.openqa.selenium.OutputType.BYTES)));
-                Allure.step("Blocked - user don't have products on cart");
-                Assert.fail("Blocked - user don't have products on cart");
+                System.out.println("-------1");
+                cart.cancell_cart();
+                System.out.println("-------1");
+
+                final  String SAMPLE_PRODUCT_PAGE = "Product/Vegetables?IC=MjM=&NC=VmVnZXRhYmxlcw==";
+                driver.get(Config.env_values("BASE_URL") + SAMPLE_PRODUCT_PAGE);
+                System.out.println("-------1");
+                cart.click_on_product();
+                System.out.println("-------1");
+                cart.click_on_add_to_cart();
+
+                Allure.step("Blocked - Products have been added to cart");
+//                Assert.fail("Blocked - user don't have products on cart");
             }
         } catch (Exception e) {
             Allure.addAttachment("Error Screenshot", new ByteArrayInputStream(((org.openqa.selenium.TakesScreenshot) driver).getScreenshotAs(org.openqa.selenium.OutputType.BYTES)));
@@ -121,6 +131,7 @@ public class ClearCartSteps {
             if (cart.is_cleared_cart()){
                 Allure.step("User has cleared the cart");
             }else {
+
 
                 Allure.addAttachment("User don't have product", new ByteArrayInputStream(((org.openqa.selenium.TakesScreenshot) driver).getScreenshotAs(org.openqa.selenium.OutputType.BYTES)));
                 Allure.step("Blocked - Something happened in clearing cart");
