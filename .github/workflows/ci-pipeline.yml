@@ -163,20 +163,23 @@ jobs:
     needs: [api-tests, ui-tests]
     steps:
     
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
       - name: Download API Allure Results
-        uses: actions/download-artifact@v3
-        with:
-          name: api-allure-results
-          path: combined-allure-results
+      uses: actions/download-artifact@v3
+      with:
+        name: api-allure-results
+        path: api-results
 
-      - name: Download UI Allure Results
-        uses: actions/download-artifact@v3
-        with:
-          name: ui-allure-results
-          path: combined-allure-results
+    - name: Download UI Allure Results
+      uses: actions/download-artifact@v3
+      with:
+        name: ui-allure-results
+        path: ui-results
+
+    - name: Merge Allure Results
+      run: |
+        mkdir -p combined-allure-results
+        cp -r api-results/* combined-allure-results/
+        cp -r ui-results/* combined-allure-results/
 
       - name: Generate Allure Report
         run: |
