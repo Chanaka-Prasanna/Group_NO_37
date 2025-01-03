@@ -18,7 +18,8 @@ public class ProductCard {
     By decrementButtonPath = By.xpath(".//span[contains(@class, 'minus')]");
     By productLinkPath = By.id("card_");
     By my_acc_path      =  By.id("spnAcc");
-    By product_list = By.xpath("//div[@id='divProducts']/div[contains(@class, 'cargillProd')]");// Locator for filtered products
+    By product_list = By.xpath("//div[@id='divProducts']/div[contains(@class, 'cargillProd')]");
+    By add_buttom = By.xpath(".//a[contains(text(), 'ADD')]");
 
 
     WebDriver driver;
@@ -55,23 +56,6 @@ public class ProductCard {
         return productCards.get(0);
     }
 
-    public void clickAddButton() {
-
-
-        // Select the first card and click its "Add" button (deterministic)
-        WebElement firstCard = getACard();
-        firstCard.findElement(By.xpath(".//a[contains(text(), 'ADD')]")).click();
-
-        // Alternative: Randomly select a product card (non-deterministic)
-        // Random random = new Random();
-        // int index = random.nextInt(productCards.size());
-        // WebElement randomCard = productCards.get(index);
-        // randomCard.findElement(By.xpath(".//button[contains(@class, 'add-button-class')]")).click();
-    }
-
-
-
-
     public boolean isQuantitySelectorDisplayed() {
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(45));
         wait.until(ExpectedConditions.visibilityOfElementLocated(quantitySelectorPath));
@@ -105,4 +89,38 @@ public class ProductCard {
     public String getCurrentUrl() {
         return driver.getCurrentUrl();
     }
+
+    public boolean isItemAlreadyAdded() {
+        // Check if the quantity selector or any "Remove" button exists
+        try {
+            driver.findElement(quantitySelectorPath); // Update selector as per your application
+            return true;
+        } catch (NoSuchElementException e) {
+            return false;
+        }
+    }
+
+    public void removeItemFromCart() {
+        // Logic to remove the item from the cart (click "Remove" button)
+        try {
+            driver.findElement(decrementButtonPath).click(); // Update selector as per your application
+            System.out.println("Item removed from cart.");
+        } catch (NoSuchElementException e) {
+            System.out.println("No item to remove.");
+        }
+    }
+
+    public void clickAddItem() {
+        // Logic to move to the next product card (e.g., click on the next add button)
+        List<WebElement> addButtons = driver.findElements(By.xpath(".//a[contains(text(), 'ADD')]")); // Update selector as per your application
+        for (WebElement button : addButtons) {
+            if (button.isDisplayed() && button.isEnabled()) {
+                button.click();
+                break;
+            }
+        }
+    }
+
 }
+
+
