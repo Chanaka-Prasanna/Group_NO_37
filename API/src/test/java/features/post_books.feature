@@ -1,11 +1,11 @@
-Feature: Book Management API Test
+Feature: Book Management API Tests
 Scenarios To validate POST request using Basic Authentication.
   Scenario: Register a new book with a new title and an author
     Given I logged in to the system with user credentials
     When I send a POST request to "/api/books" with body:
       """
       {
-        "id": 3,
+        "id": 6,
         "title": "The Adventures of Sherlock Holmes",
         "author": "Arthur Conan Doyle"
       }
@@ -34,23 +34,12 @@ Scenarios To validate POST request using Basic Authentication.
       """
     Then I should receive a 208 status code
 
-  Scenario: Register a book with already existing book title
-    Given I logged in to the system with user credentials
-    When I send a POST request to "/api/books" with body:
-      """
-      {
-        "title": "The Adventures of Sherlock Holmes",
-        "author": "Arthur Conan Doyle"
-      }
-      """
-    Then I should receive a 208 status code
-
   Scenario: Register a new book by only providing an author
     Given I logged in to the system with user credentials
     When I send a POST request to "/api/books" with body:
       """
       {
-          "author": "F. Scott Fitzgerald"
+          "author": "Jerome David Salinger"
       }
       """
     Then I should receive a 400 status code
@@ -60,9 +49,9 @@ Scenarios To validate POST request using Basic Authentication.
     When I send a POST request to "/api/books" with body:
       """
       {
-        "id": 2,
+        "id": 4,
         "title": "The Great Gatsby",
         "author": "F. Scott Fitzgerald"
       }
       """
-    Then I should receive a 400 status code
+    Then I should receive a 409 status code

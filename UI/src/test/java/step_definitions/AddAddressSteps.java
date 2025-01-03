@@ -31,6 +31,7 @@ public class AddAddressSteps {
     public void setup() {
         this.driver = DriverFactory.get_driver();
     }
+
     Address address ;
 
     @And("I navigate to the manage address page")

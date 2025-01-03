@@ -1,6 +1,7 @@
 Feature: Add to Cart
   As a user, I want to add products to my cart so that I can purchase them later.
 
+
   Scenario: Add a product to the cart
     Given I am logged in
     And I am on the product listing page

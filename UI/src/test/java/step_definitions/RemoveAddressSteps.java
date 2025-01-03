@@ -94,7 +94,7 @@ public class RemoveAddressSteps {
     public void i_click_delete_button_for_one() {
         try{
             if (dives_with_address.size() >= 2) {
-//              // welawkata default ekak wath nethiwenna puluwan. handle krnna
+                wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("loader1")));
                 WebElement secondAddressDiv = dives_with_address.get(1);
                 address.click_on_delete_btn(secondAddressDiv);
                 Allure.step("Accepted the alert for address deletion.");
