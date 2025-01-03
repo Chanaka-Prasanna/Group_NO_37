@@ -67,21 +67,17 @@ public class Address {
             driver.findElement(apartment_name_path).sendKeys("Kurunegala 1");
             driver.findElement(street_path).sendKeys("Maha weediya");
             driver.findElement(land_mark_path).sendKeys("Post office");
-//            driver.findElement(city_path).sendKeys("Kurunegala"); // will automatically fill
+
 
             WebElement dropdown = driver.findElement(dropdown_path);
             Select select = new Select(dropdown);
             select.selectByIndex(1);
 
             List<WebElement> elements = driver.findElements(type_path);
-            //elements.getFirst().click();
             elements.get(0).click();
-
-            List<WebElement> addressTypes_as_p_tags = driver.findElements(By.xpath("/html/body/div[3]/div[2]/div/div/div/div/div[6]/div[2]/div"));
 
             String addressId = "";
             int addressType = 2;
-            // Map addressType to specific ids
             switch (addressType) {
                 case 1:
                     addressId = "typeHome";
@@ -97,15 +93,8 @@ public class Address {
                     return;
             }
 
-            // Find the <a> tag by id and click
             WebElement addressElement = driver.findElement(By.id(addressId));
             addressElement.click();
-//            WebElement checkbox = driver.findElement(By.id("cbIsDefault"));
-//            ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", checkbox);
-//
-//            if (!checkbox.isSelected()) {
-//                checkbox.click();
-//            }
 
 
         } catch (Exception e) {
@@ -115,28 +104,25 @@ public class Address {
 
     public void click_save_address() {
         try {
-            // Wait for any loaders to disappear first
-            wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("loader")));
 
-            // Find the button
+            wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("loader")));
             WebElement saveButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@id=\"btnAddAddress\"]")));
 
-            // Scroll the button into view
             ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", saveButton);
-
-            // Add a small wait after scrolling
             Thread.sleep(500);
 
-            // Try multiple click strategies
+
             try {
-                // Try regular click first
+
                 saveButton.click();
+
             } catch (Exception e) {
                 try {
-                    // If regular click fails, try JavaScript click
+
                     ((JavascriptExecutor) driver).executeScript("arguments[0].click();", saveButton);
+
                 } catch (Exception e2) {
-                    // If both fail, try moving to element and clicking
+
                     new org.openqa.selenium.interactions.Actions(driver)
                             .moveToElement(saveButton)
                             .click()
@@ -157,47 +143,44 @@ public class Address {
 
     public boolean is_address_added() {
         try {
-            // Wait for loader to disappear first
+
             WebDriverWait longWait = new WebDriverWait(driver, Duration.ofSeconds(30));
             longWait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("loader")));
 
-            // Wait for parent div
             longWait.until(ExpectedConditions.presenceOfElementLocated(parent_div_of_addresses));
             WebElement parentDiv = driver.findElement(parent_div_of_addresses);
 
-
-            // Try multiple selectors to find addresses
             List<WebElement> addressDivs = null;
             try {
-                // Try the main-address class first
+
                 addressDivs = parentDiv.findElements(address_class_name);
+
             } catch (Exception e) {
-                // If that fails, try alternative selectors
+
                 addressDivs = parentDiv.findElements(By.cssSelector(".address-box, .address-item, [data-type='address']"));
+
             }
 
-            System.out.println("Number of addresses found: " + addressDivs.size());
-
-            // Verify URL
             String current_url = driver.getCurrentUrl();
-            String expected_url = Config.env_values("BASE_URL") + "ManageAddress";
-
-            // If we found any addresses and we're on the right page, consider it successful
             boolean success = !addressDivs.isEmpty() && current_url.contains("ManageAddress");
 
             if (success) {
+
                 System.out.println("Address verification successful");
+
             } else {
+
                 System.out.println("Current URL: " + current_url);
                 System.out.println("Expected URL contains: ManageAddress");
                 System.out.println("Number of addresses: " + addressDivs.size());
+
             }
 
             return success;
 
         } catch (Exception e) {
+
             System.out.println("Error during address verification: " + e.getMessage());
-            // Instead of throwing exception, return false
             return false;
         }
     }
@@ -206,19 +189,24 @@ public class Address {
     public  List<WebElement> getAddressDivs(){
 
         try{
+
             By parent_div_of_addresses = By.xpath("//*[@id=\"divOrderShow\"]");
             By address_class_name = By.className("mainAddress");
             WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
             wait.until(ExpectedConditions.visibilityOfElementLocated(parent_div_of_addresses));
             WebElement parentDiv = driver.findElement(parent_div_of_addresses);
             return parentDiv.findElements(address_class_name);
+
         } catch (Exception e) {
+
             throw new RuntimeException(e);
+
         }
     }
     // Method to click the delete button for a specific address
     public void click_on_delete_btn(WebElement addressDiv) {
         try{
+
             wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("loader")));
             wait.until(ExpectedConditions.visibilityOfElementLocated(By.className("DelAdd")));
             addressDiv.findElement(By.className("DelAdd")).click();
@@ -227,8 +215,11 @@ public class Address {
             Alert alert = driver.switchTo().alert();
             alert.accept();
             Allure.step("Accepted the alert for address deletion.");
+
         } catch (Exception e) {
+
             throw new RuntimeException(e);
+
         }
 
     }
@@ -236,18 +227,26 @@ public class Address {
     // Method to confirm address deletion
     public void wait_for_confirmation() {
         try{
+
             wait.until(ExpectedConditions.visibilityOfElementLocated(confirm_txt));
+
         } catch (Exception e) {
+
             throw new RuntimeException(e);
+
         }
 
     }
 
     public void confirm_deletion() {
         try{
+
             driver.findElement(confirm_button).click();
+
         } catch (Exception e) {
+
             throw new RuntimeException(e);
+
         }
 
     }
