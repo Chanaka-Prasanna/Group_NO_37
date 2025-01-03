@@ -29,7 +29,6 @@ public class ClearCartSteps {
 
 
     @Given("I logged in")
-    @Step("I logged in")
     public void i_logged_in() {
         try {
             LoginPage loginpage = new LoginPage(driver);
@@ -61,7 +60,6 @@ public class ClearCartSteps {
     }
 
     @And("I am on the cart page")
-    @Step("I am on the cart page")
     public void i_am_on_the_cart_page() {
         try {
             if (cart.is_on_cart()){
@@ -80,7 +78,6 @@ public class ClearCartSteps {
     }
 
     @And("I have multiple products in my cart")
-    @Step("I have multiple products in my cart")
     public void i_have_multiple_products_in_my_cart() {
         try {
             System.out.println(cart.have_products());
@@ -110,7 +107,6 @@ public class ClearCartSteps {
 
 
     @When("I click on the clear cart button")
-    @Step("I click on the clear cart button")
     public void i_click_on_the_clear_cart_button() {
         try {
             cart.click_clear_card();
@@ -123,7 +119,6 @@ public class ClearCartSteps {
     }
 
     @And("I confirm the action in the popup \\(if applicable)")
-    @Step("I confirm the action in the popup")
     public void i_confirm_the_action_in_the_popup() {
 
         try {
@@ -145,7 +140,6 @@ public class ClearCartSteps {
     }
 
     @And("All products should be removed from the cart")
-    @Step("All products should be removed from the cart")
     public void all_products_should_be_removed_from_the_cart() {
         try {
             if (cart.isCartEmpty()){

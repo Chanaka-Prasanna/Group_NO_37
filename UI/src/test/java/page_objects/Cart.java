@@ -1,9 +1,6 @@
 package page_objects;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import java.time.Duration;
@@ -46,7 +43,6 @@ public class Cart {
 
     public String if_on_product_page(){
         try{
-            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
             wait.until(ExpectedConditions.visibilityOfElementLocated(product_page_txt));
             return driver.findElement(product_page_txt).getText();
         } catch (Exception e) {
@@ -73,44 +69,35 @@ public class Cart {
         }
     }
 
-    public void click_on_add_to_cart(){
-        try{
-//            System.out.println("----1");
-//            WebElement plusButton = driver.findElement(By.xpath("//*[@id=\"crtplus1229\"]"));
-//            System.out.println("----2");
-//            boolean isDisplayed = plusButton.isDisplayed();
-//            System.out.println("----");
-//            System.out.println(isDisplayed);
-            wait.until(ExpectedConditions.visibilityOfElementLocated(add_to_cart_path));
-            WebElement element = driver.findElement(add_to_cart_path);
-            element.click();
-//            WebElement plusMinusElement = driver.findElement(By.cssSelector("plus-minus number ng-scope"));
-//
-//            System.out.println(plusMinusElement);
-//            System.out.println("---hghg");
-//            if (!plusMinusElement.isDisplayed()) {
-//                System.out.println("Hoiiii");
-//                wait.until(ExpectedConditions.visibilityOfElementLocated(add_to_cart_path));
-//                WebElement element = driver.findElement(add_to_cart_path);
-//                element.click();
-//            } else {
-//                System.out.println("Hhhhhhhh");
-////                WebElement plusButton = driver.findElement(By.xpath("//span[@class='plus' and contains(@ng-click, 'plus')]"));
-//                String productId = "1229";
-//                WebElement plusButton = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"plus1229\"]")));
-//                plusButton.click();
-//
-//            }
+    public void click_on_add_to_cart() {
+        try {
+            wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("loader1")));
+
+            By plusMinusLocator = By.id("crtplus1229");
+            By plusButtonLocator = By.xpath("//*[@id=\"plus1229\"]");
+
+            try {
+                WebElement plusMinusControl = driver.findElement(plusMinusLocator);
+                if (plusMinusControl.isDisplayed()) {
+                    wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("lII1229")));
+                    WebElement plusButton = wait.until(ExpectedConditions.elementToBeClickable(plusButtonLocator));
+                    plusButton.click();
+                }
+            } catch (NoSuchElementException e) {
+                WebElement addToCartButton = wait.until(ExpectedConditions.elementToBeClickable(add_to_cart_path));
+                addToCartButton.click();
+            }
+
+            wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("lII1229")));
 
         } catch (Exception e) {
-            System.out.println("Error : " + e.getMessage());
+            System.out.println("Error clicking product: " + e.getMessage());
             throw new RuntimeException(e);
         }
     }
 
     public String css_value_of_display(){
         try{
-            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
             wait.until(ExpectedConditions.visibilityOfElementLocated(cart_bbl_path));
             return driver.findElement(cart_bbl_path).getCssValue("display");
         } catch (Exception e) {
@@ -120,7 +107,7 @@ public class Cart {
 
     public boolean is_on_cart() {
         try {
-            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+
             // Wait until cart bubble disappears
             wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("divCartBubble")));
 
@@ -151,7 +138,7 @@ public class Cart {
 
     public void click_clear_card(){
         try{
-            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
+
             wait.until(ExpectedConditions.visibilityOfElementLocated(clear_cart_btn_path));
             driver.findElement(clear_cart_btn_path).click();
         } catch (Exception e) {
