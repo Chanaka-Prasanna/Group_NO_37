@@ -25,6 +25,7 @@ public class Cart {
     By clear_alert_txt_path     = By.xpath("//*[@id=\"txtAlertText\"]");
     By confirm_clear_btn_path   = By.xpath("//*[@id=\"btnClearCartOk\"]");
     By empty_cart_txt_path      = By.xpath("");
+    By cancell_cart_path        = By.xpath("//*[@id=\"cancelCart\"]");
 
     WebDriver driver;
 
@@ -117,12 +118,16 @@ public class Cart {
         }
     }
 
-    public boolean is_on_cart(){
-        try{
+    public boolean is_on_cart() {
+        try {
+            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+
+            // Wait until cart bubble disappears
+            wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("divCartBubble")));
 
             driver.findElement(cart_icon_path).click();
-            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
             wait.until(ExpectedConditions.visibilityOfElementLocated(cart_path));
+
             String css_value = driver.findElement(cart_path).getCssValue("display");
             return css_value.equals("block");
 
@@ -130,6 +135,7 @@ public class Cart {
             throw new RuntimeException(e);
         }
     }
+
 
     public boolean have_products(){
         try{
@@ -151,8 +157,19 @@ public class Cart {
         }
     }
 
+
+    public void cancell_cart(){
+        try{
+        driver.findElement(cancell_cart_path).click();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public boolean is_cleared_cart(){
         try{
+
+            wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("loader1")));
             WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
             wait.until(ExpectedConditions.visibilityOfElementLocated(clear_alert_txt_path));
             String actual = driver.findElement(clear_alert_txt_path).getText().trim();
