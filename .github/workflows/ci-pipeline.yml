@@ -171,6 +171,9 @@ jobs:
         with:
           name: api-allure-results
           path: combined-allure-results
+          
+      - name: Verify ui-results Folder
+        run: ls -la ui-allure-results  
 
       - name: Download UI Allure Results
         uses: actions/download-artifact@v3
