@@ -24,16 +24,17 @@ public class Login {
     }
 
     public void enter_email_or_phone(String text){
-
+        wait.until(ExpectedConditions.visibilityOfElementLocated(username_path));
         driver.findElement(username_path).sendKeys(text);
     }
 
     public void enter_password(String password){
+        wait.until(ExpectedConditions.visibilityOfElementLocated(password_path));
         driver.findElement(password_path).sendKeys(password);
     }
 
     public void click_login(){
-
+        wait.until(ExpectedConditions.visibilityOfElementLocated(login_btn_path));
         driver.findElement(login_btn_path).click();
 
     }
