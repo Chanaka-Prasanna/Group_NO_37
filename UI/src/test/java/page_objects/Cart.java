@@ -121,9 +121,9 @@ public class Cart {
     public boolean is_on_cart() {
         try {
             WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
-
             // Wait until cart bubble disappears
             wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("divCartBubble")));
+
 
             driver.findElement(cart_icon_path).click();
             wait.until(ExpectedConditions.visibilityOfElementLocated(cart_path));
@@ -142,14 +142,16 @@ public class Cart {
             WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
             wait.until(ExpectedConditions.visibilityOfElementLocated(products_div_path));
             List<WebElement> products = driver.findElements(products_div_path);
+
             return !products.isEmpty();
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            return false;
         }
     }
 
     public void click_clear_card(){
-        try{            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
+        try{
+            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
             wait.until(ExpectedConditions.visibilityOfElementLocated(clear_cart_btn_path));
             driver.findElement(clear_cart_btn_path).click();
         } catch (Exception e) {

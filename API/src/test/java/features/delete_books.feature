@@ -11,6 +11,7 @@ Scenarios to validate DELETE request using Basic Authentication.
     When I send a DELETE request to "/api/books/5"
     Then I should receive a 403 status code
 
+# Scenario to validate that a user with non-admin credentials is forbidden from deleting a book, even if the book id does not exist.
   Scenario: Delete a non existing book by ID as a User
     Given I logged in to the system with user credentials
     When I send a DELETE request to "/api/books/100"

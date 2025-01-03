@@ -83,22 +83,21 @@ public class ClearCartSteps {
     @Step("I have multiple products in my cart")
     public void i_have_multiple_products_in_my_cart() {
         try {
+            System.out.println(cart.have_products());
             if (cart.have_products()){
                 Allure.step("User has products in cart");
             }else {
 
-                System.out.println("-------1");
+
                 cart.cancell_cart();
-                System.out.println("-------1");
 
                 final  String SAMPLE_PRODUCT_PAGE = "Product/Vegetables?IC=MjM=&NC=VmVnZXRhYmxlcw==";
                 driver.get(Config.env_values("BASE_URL") + SAMPLE_PRODUCT_PAGE);
-                System.out.println("-------1");
                 cart.click_on_product();
-                System.out.println("-------1");
                 cart.click_on_add_to_cart();
+                cart.is_on_cart();
 
-                Allure.step("Blocked - Products have been added to cart");
+                Allure.step("Products have been added to cart");
 //                Assert.fail("Blocked - user don't have products on cart");
             }
         } catch (Exception e) {
