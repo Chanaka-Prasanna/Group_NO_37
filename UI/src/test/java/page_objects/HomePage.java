@@ -33,10 +33,7 @@ package page_objects;
 
 import java.time.Duration;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -61,26 +58,63 @@ public class HomePage {
         this.driver = driver;
     }
 
+//    public CategoryPage selectCategory(String category) {
+//
+//        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
+//
+//        WebElement categoryElement;
+//        if (category.equalsIgnoreCase("Vegetables")) {
+//            categoryElement = wait.until(ExpectedConditions.elementToBeClickable(vegetable_path));
+//        } else if (category.equalsIgnoreCase("Fruits")) {
+//            categoryElement = wait.until(ExpectedConditions.elementToBeClickable(fruits_path));
+//        } else if (category.equalsIgnoreCase("Baby Products")) {
+//            categoryElement = wait.until(ExpectedConditions.elementToBeClickable(baby_products_path));
+//        } else if (category.equalsIgnoreCase("Beverages")) {
+//            categoryElement = wait.until(ExpectedConditions.elementToBeClickable(beverages_path));
+//        } else if (category.equalsIgnoreCase("Food Cupboard")) {
+//            categoryElement = wait.until(ExpectedConditions.elementToBeClickable(food_cupboard_path));
+//        } else {
+//            throw new IllegalArgumentException("Unknown category: " + category);
+//        }
+//        JavascriptExecutor js = (JavascriptExecutor) driver;
+//        js.executeScript("arguments[0].click();", categoryElement);
+//
+//        return new CategoryPage(driver);
+//    }
+
     public CategoryPage selectCategory(String category) {
-
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
+        WebElement categoryElement = null;
 
-        WebElement categoryElement;
-        if (category.equalsIgnoreCase("Vegetables")) {
-            categoryElement = wait.until(ExpectedConditions.elementToBeClickable(vegetable_path));
-        } else if (category.equalsIgnoreCase("Fruits")) {
-            categoryElement = wait.until(ExpectedConditions.elementToBeClickable(fruits_path));
-        } else if (category.equalsIgnoreCase("Baby Products")) {
-            categoryElement = wait.until(ExpectedConditions.elementToBeClickable(baby_products_path));
-        } else if (category.equalsIgnoreCase("Beverages")) {
-            categoryElement = wait.until(ExpectedConditions.elementToBeClickable(beverages_path));
-        } else if (category.equalsIgnoreCase("Food Cupboard")) {
-            categoryElement = wait.until(ExpectedConditions.elementToBeClickable(food_cupboard_path));
-        } else {
-            throw new IllegalArgumentException("Unknown category: " + category);
+        try {
+            switch (category.toLowerCase()) {
+                case "vegetables":
+                    categoryElement = wait.until(ExpectedConditions.elementToBeClickable(vegetable_path));
+                    break;
+                case "fruits":
+                    categoryElement = wait.until(ExpectedConditions.elementToBeClickable(fruits_path));
+                    break;
+                case "baby products":
+                    categoryElement = wait.until(ExpectedConditions.elementToBeClickable(baby_products_path));
+                    break;
+                case "beverages":
+                    categoryElement = wait.until(ExpectedConditions.elementToBeClickable(beverages_path));
+                    break;
+                case "food cupboard":
+                    categoryElement = wait.until(ExpectedConditions.elementToBeClickable(food_cupboard_path));
+                    break;
+                default:
+                    throw new IllegalArgumentException("Unknown category: " + category);
+            }
+
+            // Scroll into view and click
+            JavascriptExecutor js = (JavascriptExecutor) driver;
+            js.executeScript("arguments[0].scrollIntoView(true);", categoryElement);
+            js.executeScript("arguments[0].click();", categoryElement);
+
+        } catch (TimeoutException e) {
+            throw new AssertionError("Unable to click category tab: " + category, e);
         }
-        JavascriptExecutor js = (JavascriptExecutor) driver;
-        js.executeScript("arguments[0].click();", categoryElement);
 
         return new CategoryPage(driver);
     }

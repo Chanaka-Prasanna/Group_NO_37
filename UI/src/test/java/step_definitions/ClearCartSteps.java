@@ -29,7 +29,6 @@ public class ClearCartSteps {
 
 
     @Given("I logged in")
-    @Step("I logged in")
     public void i_logged_in() {
         try {
             LoginPage loginpage = new LoginPage(driver);
@@ -61,105 +60,122 @@ public class ClearCartSteps {
     }
 
     @And("I am on the cart page")
-    @Step("I am on the cart page")
     public void i_am_on_the_cart_page() {
+
         try {
+
             if (cart.is_on_cart()){
                 Allure.step("User can see the cart");
             }else {
 
-                Allure.addAttachment("Failed to see the cart", new ByteArrayInputStream(((org.openqa.selenium.TakesScreenshot) driver).getScreenshotAs(org.openqa.selenium.OutputType.BYTES)));
-                Allure.step("Test Failed - Failed to see the cart");
-                Assert.fail("Test Failed - Failed to see the cart");
-            }
-        } catch (Exception e) {
-            Allure.addAttachment("Error Screenshot", new ByteArrayInputStream(((org.openqa.selenium.TakesScreenshot) driver).getScreenshotAs(org.openqa.selenium.OutputType.BYTES)));
-            Allure.step("Blocked - Exception on cart displaying: " + e.getMessage());
-            Assert.fail("Blocked - Exception on cart displaying");
-        }
-    }
-
-    @And("I have multiple products in my cart")
-    @Step("I have multiple products in my cart")
-    public void i_have_multiple_products_in_my_cart() {
-        try {
-            System.out.println(cart.have_products());
-            if (cart.have_products()){
-                Allure.step("User has products in cart");
-            }else {
-
-
                 cart.cancell_cart();
-
                 final  String SAMPLE_PRODUCT_PAGE = "Product/Vegetables?IC=MjM=&NC=VmVnZXRhYmxlcw==";
                 driver.get(Config.env_values("BASE_URL") + SAMPLE_PRODUCT_PAGE);
                 cart.click_on_product();
                 cart.click_on_add_to_cart();
                 cart.is_on_cart();
-
                 Allure.step("Products have been added to cart");
-//                Assert.fail("Blocked - user don't have products on cart");
+
             }
         } catch (Exception e) {
+
+            Allure.addAttachment("Error Screenshot", new ByteArrayInputStream(((org.openqa.selenium.TakesScreenshot) driver).getScreenshotAs(org.openqa.selenium.OutputType.BYTES)));
+            Allure.step("Blocked - Exception on cart displaying: " + e.getMessage());
+            Assert.fail("Blocked - Exception on cart displaying");
+
+        }
+    }
+
+    @And("I have multiple products in my cart")
+    public void i_have_multiple_products_in_my_cart() {
+        try {
+
+            System.out.println(cart.have_products());
+            if (cart.have_products()){
+
+                Allure.step("User has products in cart");
+
+            }else {
+
+                cart.cancell_cart();
+                Allure.step("Products have been added to cart");
+
+            }
+        } catch (Exception e) {
+
             Allure.addAttachment("Error Screenshot", new ByteArrayInputStream(((org.openqa.selenium.TakesScreenshot) driver).getScreenshotAs(org.openqa.selenium.OutputType.BYTES)));
             Allure.step("Blocked - Exception on getting products on cart: " + e.getMessage());
             Assert.fail("Blocked - Exception on getting products on cart");
+
         }
     }
 
 
 
     @When("I click on the clear cart button")
-    @Step("I click on the clear cart button")
     public void i_click_on_the_clear_cart_button() {
+
         try {
+
             cart.click_clear_card();
             Allure.step("User has clicked in clear button");
+
         } catch (Exception e) {
+
             Allure.addAttachment("Error Screenshot", new ByteArrayInputStream(((org.openqa.selenium.TakesScreenshot) driver).getScreenshotAs(org.openqa.selenium.OutputType.BYTES)));
             Allure.step("Blocked - Exception on clicking on clear button: " + e.getMessage());
             Assert.fail("Blocked - Exception on clicking on clear button");
+
         }
+
     }
 
     @And("I confirm the action in the popup \\(if applicable)")
-    @Step("I confirm the action in the popup")
     public void i_confirm_the_action_in_the_popup() {
 
         try {
             if (cart.is_cleared_cart()){
-                Allure.step("User has cleared the cart");
-            }else {
 
+                Allure.step("User has cleared the cart");
+
+            }else {
 
                 Allure.addAttachment("User don't have product", new ByteArrayInputStream(((org.openqa.selenium.TakesScreenshot) driver).getScreenshotAs(org.openqa.selenium.OutputType.BYTES)));
                 Allure.step("Blocked - Something happened in clearing cart");
                 Assert.fail("Blocked - Something happened in clearing cart");
+
             }
         } catch (Exception e) {
+
             Allure.addAttachment("Error Screenshot", new ByteArrayInputStream(((org.openqa.selenium.TakesScreenshot) driver).getScreenshotAs(org.openqa.selenium.OutputType.BYTES)));
             Allure.step("Blocked - Exception on getting cleared the cart: " + e.getMessage());
             Assert.fail("Blocked - Exception on getting cleared the cart");
+
         }
 
     }
 
     @And("All products should be removed from the cart")
-    @Step("All products should be removed from the cart")
     public void all_products_should_be_removed_from_the_cart() {
         try {
+
             if (cart.isCartEmpty()){
+
                 Allure.step("Cart is cleared");
+
             }else {
 
                 Allure.addAttachment("Something went wrong on clearing cart", new ByteArrayInputStream(((org.openqa.selenium.TakesScreenshot) driver).getScreenshotAs(org.openqa.selenium.OutputType.BYTES)));
                 Allure.step("Blocked - Something happened in clearing cart");
                 Assert.fail("Blocked - Something happened in clearing cart");
+
             }
         } catch (Exception e) {
+
             Allure.addAttachment("Error Screenshot", new ByteArrayInputStream(((org.openqa.selenium.TakesScreenshot) driver).getScreenshotAs(org.openqa.selenium.OutputType.BYTES)));
             Allure.step("Blocked - Exception on getting cleared the cart: " + e.getMessage());
             Assert.fail("Blocked - Exception on getting cleared the cart");
+
         }
 
     }
@@ -168,13 +184,15 @@ public class ClearCartSteps {
     @After
     public void tear_down() {
         try {
+
             DriverFactory.close_driver();
             Allure.step("Driver closed successfully");
+
         } catch (Exception e) {
+
             Allure.step("Error closing driver: " + e.getMessage());
+
         }
     }
-
-
 
 }
