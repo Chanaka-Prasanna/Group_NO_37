@@ -47,6 +47,17 @@ In the `UI/.env` file, set the following:
 
 ```env
 BASE_URL=https://cargillsonline.com/
+LOGIN_TEXT = YOUR EMAIL OR MOBILE NUMBER
+PASSWORD = YOUR PASSWORD
+```
+
+In the `API/.env` file, set the following:
+
+```env
+BASE_URI=http://localhost:7081
+USERNAME_ADMIN= ADMIN USERNAME
+USERNAME_USER= USER USERNAME
+PASSWORD= YOUR PASSWORD
 ```
 
 ## Allure properties
